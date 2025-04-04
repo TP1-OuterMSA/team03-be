@@ -1,6 +1,6 @@
 spring:
   application:
-    name: msa-test1
+    name: team03-be
 
   datasource:
     url: jdbc:mysql://msa-service-team03.c3kygsge2own.ap-northeast-2.rds.amazonaws.com:3306/paper1?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
