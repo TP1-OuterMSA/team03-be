@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/menu")
+@RequestMapping("/api/team3/analytics/menu")
 @RequiredArgsConstructor
 public class RankController implements RankControllerDocs {
 
