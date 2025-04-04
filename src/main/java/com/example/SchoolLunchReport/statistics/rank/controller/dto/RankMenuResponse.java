@@ -15,7 +15,7 @@ public record RankMenuResponse(
     public static RankMenuResponse of(Food food, Double score, Integer rank) {
         return RankMenuResponse.builder()
             .id(food.getId())
-            .name(food.getFoodName())
+            .name(food.getName())
             .score(score)
             .rankChange((int) (Math.random() * 11) - 5)
             .rank(rank)
