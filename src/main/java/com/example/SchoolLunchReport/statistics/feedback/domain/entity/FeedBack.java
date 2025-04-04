@@ -1,8 +1,11 @@
 package com.example.SchoolLunchReport.statistics.feedback.domain.entity;
 
 import com.example.SchoolLunchReport.global.common.BaseTimeEntity;
+import com.example.SchoolLunchReport.product.FoodMenu.domain.entity.FoodMenu;
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
@@ -16,17 +19,19 @@ import lombok.NoArgsConstructor;
 public class FeedBack extends BaseTimeEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double score;
-
     @ManyToOne
-    private Food food;
+    private FoodMenu foodMenu;
 
     @Builder
-    public FeedBack(Long id, Double score, Food food, LocalDate createdAt) {
+    public FeedBack(Long id, Double score, FoodMenu foodMenu) {
         this.id = id;
         this.score = score;
-        this.food = food;
-        this.createdAt = createdAt;
+    }
+
+    public Food getFood() {
+        return foodMenu.getFood();
     }
 }
