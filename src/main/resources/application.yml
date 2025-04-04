@@ -3,9 +3,9 @@ spring:
     name: msa-test1
 
   datasource:
-    url: jdbc:mysql://paper-data-crawling.cl64kkugmebl.ap-northeast-2.rds.amazonaws.com:3306/paper1?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
-    username: paper
-    password: paper)paper123
+    url: jdbc:mysql://msa-service-team03.c3kygsge2own.ap-northeast-2.rds.amazonaws.com:3306/paper1?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    username: admin
+    password: msa_service
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -21,4 +21,10 @@ spring:
 #    url: jdbc:mysql://msa-service-team03.c3kygsge2own.ap-northeast-2.rds.amazonaws.com:3306/paper1?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
 #    username: admin
 #    password: msa_service
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+
+#  datasource:
+#    url: jdbc:mysql://paper-data-crawling.cl64kkugmebl.ap-northeast-2.rds.amazonaws.com:3306/paper1?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+#    username: paper
+#    password: paper)paper123
 #    driver-class-name: com.mysql.cj.jdbc.Driver
