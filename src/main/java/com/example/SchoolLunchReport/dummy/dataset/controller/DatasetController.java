@@ -59,7 +59,7 @@ public class DatasetController {
     @GetMapping("/test")
     public ResponseEntity<Map<String, String>> testEndpoint() {
         Map<String, String> response = new HashMap<>();
-        response.put("message", "test!");
+        response.put("message", "test2!");
         return ResponseEntity.ok(response);
     }
 }
