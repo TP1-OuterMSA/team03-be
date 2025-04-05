@@ -4,9 +4,11 @@ import static com.example.SchoolLunchReport.global.common.Constants.ANALYTICS_TE
 
 import com.example.SchoolLunchReport.global.response.ApiResponse;
 import com.example.SchoolLunchReport.global.response.type.SuccessType;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedRankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
-import com.example.SchoolLunchReport.statistics.domain.type.Period;
+import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.service.StatisticsService;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,15 +25,27 @@ public class StatisticsController implements StatisticsControllerDocs {
     @Override
     @GetMapping("/rank")
     public ApiResponse<?> getRankMenu(
-        @RequestParam Period period
+        @RequestParam PeriodType periodType,
+        @RequestParam(required = false) LocalDate conditionDate
     ) {
-        RankMenuResponseDto rankMenuResponseDto = statisticsService.getRankMenu(period);
-        return ApiResponse.success(SuccessType.SUCCESS, rankMenuResponseDto);
+        if (conditionDate == null) {
+            conditionDate = LocalDate.now();
+        }
+        CombinedRankMenuResponseDto combinedRankMenuResponseDto = statisticsService.getRankMenu(
+            periodType, conditionDate);
+        return ApiResponse.success(SuccessType.SUCCESS, combinedRankMenuResponseDto);
     }
 
     @GetMapping
     public ApiResponse<?> getStatistics() {
         return ApiResponse.success(SuccessType.SUCCESS, statisticsService.getStatistics());
+    }
+
+    @Override
+    public ApiResponse<RankMenuResponseDto> getTrendingMenu(PeriodType periodType) {
+
+        return ApiResponse.success(SuccessType.SUCCESS, statisticsService.getTrendingMenu(
+            periodType));
     }
 
 }
