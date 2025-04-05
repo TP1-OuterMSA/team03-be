@@ -1,4 +1,4 @@
-package com.example.SchoolLunchReport.statistics.rank.domain.type;
+package com.example.SchoolLunchReport.statistics.domain.type;
 
 import java.time.LocalDate;
 

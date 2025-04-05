@@ -1,8 +1,8 @@
-package com.example.SchoolLunchReport.statistics.feedback.impl;
+package com.example.SchoolLunchReport.statistics.impl;
 
-import com.example.SchoolLunchReport.statistics.feedback.domain.entity.FeedBack;
-import com.example.SchoolLunchReport.statistics.feedback.repository.FeedBackJpaRepo;
-import com.example.SchoolLunchReport.statistics.rank.domain.type.Period;
+import com.example.SchoolLunchReport.statistics.domain.entity.FeedBack;
+import com.example.SchoolLunchReport.statistics.repository.FeedBackJpaRepo;
+import com.example.SchoolLunchReport.statistics.domain.type.Period;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
