@@ -21,7 +21,7 @@ public class DatasetController {
     public ResponseEntity<Map<String, Object>> createFoodData(@RequestBody List<Food> foods) {
         int count = datasetService.createFoodData(foods);
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "음식 데이터가 성공적으로 생성되었습니다");
+        response.put("message", "음식 데이터가 성공적으로 생성되었습니다..");
         response.put("count", count);
         return ResponseEntity.ok(response);
     }
@@ -29,7 +29,7 @@ public class DatasetController {
     public ResponseEntity<Map<String, Object>> createMenuWithFoods(@RequestBody List<MenuWithFoodsDTO> menuWithFoodsList) {
         int count = datasetService.createMenuWithFoods(menuWithFoodsList);
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "메뉴 및 푸드메뉴 데이터가 성공적으로 생성되었습니다");
+        response.put("message", "메뉴 및 푸드메뉴 데이터가 성공적으로 생성되었습니다..");
         response.put("count", count);
         return ResponseEntity.ok(response);
     }
@@ -37,7 +37,7 @@ public class DatasetController {
     public ResponseEntity<Map<String, Object>> createFeedback(@RequestBody List<FeedBackDTO> feedbacks) {
         int count = datasetService.createFeedback(feedbacks);
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "피드백 데이터가 성공적으로 생성되었습니다");
+        response.put("message", "피드백 데이터가 성공적으로 생성되었습니다..");
         response.put("count", count);
         return ResponseEntity.ok(response);
     }
@@ -45,7 +45,7 @@ public class DatasetController {
     public ResponseEntity<Map<String, Object>> createRandomFeedback() {
         int count = datasetService.createRandomFeedback();
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "랜덤 피드백 데이터가 성공적으로 생성되었습니다");
+        response.put("message", "랜덤 피드백 데이터가 성공적으로 생성되었습니다..");
         response.put("count", count);
         return ResponseEntity.ok(response);
     }
