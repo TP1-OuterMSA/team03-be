@@ -1,12 +1,12 @@
-package com.example.SchoolLunchReport.statistics.rank.impl;
+package com.example.SchoolLunchReport.statistics.impl;
 
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
-import com.example.SchoolLunchReport.statistics.feedback.domain.entity.FeedBack;
-import com.example.SchoolLunchReport.statistics.rank.controller.dto.RankMenuResponse;
-import com.example.SchoolLunchReport.statistics.rank.controller.dto.RankMenuResponseDto;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse.ScoreCount;
+import com.example.SchoolLunchReport.statistics.domain.entity.FeedBack;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponse;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
+import com.example.SchoolLunchReport.statistics.domain.type.Period;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -74,9 +74,27 @@ public class RankImpl {
         if (value == null) {
             return null;
         }
-        return BigDecimal.valueOf(value)
-            .setScale(1, RoundingMode.HALF_UP)
-            .doubleValue();
+        return Math.round(value * 10.0) / 10.0;
+//        if (value == null) {
+//            return null;
+//        }
+//        return BigDecimal.valueOf(value)
+//            .setScale(1, RoundingMode.HALF_UP)
+//            .doubleValue();
     }
 
+    public StatisticsResponse produceStatistics(List<FeedBack> feedBackList, Period period) {
+        Map<Integer, Long> scoreCount = feedBackList.stream()
+            .collect(Collectors.groupingBy(
+                FeedBack::getScore,
+                Collectors.counting()
+            ));
+        List<ScoreCount> scores = IntStream.rangeClosed(1, 5)
+            .mapToObj(score -> new ScoreCount(score, scoreCount.getOrDefault(score, 0L)))
+            .toList();
+        return StatisticsResponse.builder()
+            .period(period)
+            .scores(scores)
+            .build();
+    }
 }
