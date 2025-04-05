@@ -2,11 +2,11 @@ spring:
   application:
     name: team03-be
 
-  datasource:
-    url: jdbc:mysql://msa-service-team03.c3kygsge2own.ap-northeast-2.rds.amazonaws.com:3306/paper1?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
-    username: admin
-    password: msa_service
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    datasource:
+      url: jdbc:mysql://msa-service-team03-eks.c3kygsge2own.ap-northeast-2.rds.amazonaws.com:3306/paper1?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+      username: admin
+      password: msa_service
+      driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -19,6 +19,12 @@ spring:
 
 #  datasource:
 #    url: jdbc:mysql://msa-service-team03.c3kygsge2own.ap-northeast-2.rds.amazonaws.com:3306/paper1?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+#    username: admin
+#    password: msa_service
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+
+#  datasource:
+#    url: jdbc:mysql://msa-service-team03-eks.c3kygsge2own.ap-northeast-2.rds.amazonaws.com:3306/paper1?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
 #    username: admin
 #    password: msa_service
 #    driver-class-name: com.mysql.cj.jdbc.Driver
