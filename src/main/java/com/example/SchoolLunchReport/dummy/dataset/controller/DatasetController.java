@@ -55,4 +55,11 @@ public class DatasetController {
         List<Menu> menus = datasetService.getAllMenus();
         return ResponseEntity.ok(menus);
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<Map<String, String>> testEndpoint() {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "test!");
+        return ResponseEntity.ok(response);
+    }
 }
