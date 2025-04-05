@@ -21,7 +21,7 @@ public class DatasetController {
     public ResponseEntity<Map<String, Object>> createFoodData(@RequestBody List<Food> foods) {
         int count = datasetService.createFoodData(foods);
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "음식 데이터가 성공적으로 생성되었습니다");
+        response.put("message", "음식 데이터가 성공적으로 생성되었습니다.");
         response.put("count", count);
         return ResponseEntity.ok(response);
     }
