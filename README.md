@@ -1,2 +1,1 @@
-# msa-test5
-django test
+# _be-template
