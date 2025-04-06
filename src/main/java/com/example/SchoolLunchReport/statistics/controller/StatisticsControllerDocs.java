@@ -5,6 +5,7 @@ import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "순위 관련된 api")
 public interface StatisticsControllerDocs {

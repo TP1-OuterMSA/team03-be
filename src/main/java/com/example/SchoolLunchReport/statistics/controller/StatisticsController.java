@@ -8,7 +8,11 @@ import com.example.SchoolLunchReport.statistics.controller.dto.response.Combined
 import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.service.StatisticsService;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,23 +30,33 @@ public class StatisticsController implements StatisticsControllerDocs {
     @GetMapping("/rank")
     public ApiResponse<?> getRankMenu(
         @RequestParam PeriodType periodType,
-        @RequestParam(required = false) LocalDate conditionDate
+        @RequestParam(required = false) LocalDate date
     ) {
-        if (conditionDate == null) {
-            conditionDate = LocalDate.now();
+        if (Objects.isNull(date)) {
+            date = LocalDate.now();
         }
+
         CombinedRankMenuResponseDto combinedRankMenuResponseDto = statisticsService.getRankMenu(
-            periodType, conditionDate);
+            periodType, date);
         return ApiResponse.success(SuccessType.SUCCESS, combinedRankMenuResponseDto);
     }
 
     @GetMapping
-    public ApiResponse<?> getStatistics() {
-        return ApiResponse.success(SuccessType.SUCCESS, statisticsService.getStatistics());
+    public ApiResponse<?> getStatistics(
+        @RequestParam(required = false) LocalDate date
+    ) {
+        if (Objects.isNull(date)) {
+            date = LocalDate.now();
+        }
+
+        return ApiResponse.success(SuccessType.SUCCESS, statisticsService.getStatistics(date));
     }
 
     @Override
-    public ApiResponse<RankMenuResponseDto> getTrendingMenu(PeriodType periodType) {
+    @GetMapping("/trending")
+    public ApiResponse<List<RankMenuResponseDto>> getTrendingMenu(
+        PeriodType periodType
+    ) {
 
         return ApiResponse.success(SuccessType.SUCCESS, statisticsService.getTrendingMenu(
             periodType));
