@@ -8,8 +8,8 @@ import com.example.SchoolLunchReport.product.food.domain.type.Category;
 import com.example.SchoolLunchReport.product.food.repository.FoodJpaRepository;
 import com.example.SchoolLunchReport.product.menu.domain.entity.Menu;
 import com.example.SchoolLunchReport.product.menu.repository.MenuJpaRepository;
-import com.example.SchoolLunchReport.statistics.feedback.domain.entity.FeedBack;
-import com.example.SchoolLunchReport.statistics.feedback.repository.FeedBackJpaRepo;
+import com.example.SchoolLunchReport.statistics.domain.entity.FeedBack;
+import com.example.SchoolLunchReport.statistics.repository.FeedBackJpaRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class DatasetService {
                     .orElseThrow(() -> new IllegalArgumentException("ID가 " + dto.getFoodMenuId() + "인 푸드메뉴를 찾을 수 없습니다"));
             if (feedBackJpaRepo.existsByFoodMenuId(dto.getFoodMenuId())) continue;
             FeedBack feedBack = FeedBack.builder()
-                    .score((double) dto.getScore())
+                    .score( dto.getScore())
                     .build();
             setField(feedBack, "foodMenu", foodMenu);
             feedBackList.add(feedBack);
@@ -107,7 +107,7 @@ public class DatasetService {
             if (feedBackJpaRepo.existsByFoodMenuId(foodMenu.getId())) {
                 continue;
             }
-            double randomScore = random.nextInt(5) + 1.0;
+            int randomScore = random.nextInt(5) + 1;
             FeedBack feedBack = FeedBack.builder()
                     .score(randomScore)
                     .build();
