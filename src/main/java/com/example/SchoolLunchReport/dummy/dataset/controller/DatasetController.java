@@ -1,7 +1,4 @@
 package com.example.SchoolLunchReport.dummy.dataset.controller;
-
-import static com.example.SchoolLunchReport.global.common.Constants.ANALYTICS_TEAM_URL;
-
 import com.example.SchoolLunchReport.dummy.dataset.dto.FeedBackDTO;
 import com.example.SchoolLunchReport.dummy.dataset.dto.MenuWithFoodsDTO;
 import com.example.SchoolLunchReport.dummy.dataset.service.DatasetService;
@@ -12,63 +9,57 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 @RestController
-@RequestMapping(ANALYTICS_TEAM_URL + "/dataset")
-public class DatasetController implements DataControllerDocs {
+@RequestMapping("/api/team3/analytics/dataset")
+public class DatasetController {
 
     private final DatasetService datasetService;
-
     public DatasetController(DatasetService datasetService) {
         this.datasetService = datasetService;
     }
-
-    @Override
     @PostMapping("/createfood")
     public ResponseEntity<Map<String, Object>> createFoodData(@RequestBody List<Food> foods) {
         int count = datasetService.createFoodData(foods);
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "음식 데이터가 성공적으로 생성되었습니다");
+        response.put("message", "음식 데이터가 성공적으로 생성되었습니다..");
         response.put("count", count);
         return ResponseEntity.ok(response);
     }
-
-    @Override
     @PostMapping("/createmenu")
-    public ResponseEntity<Map<String, Object>> createMenuWithFoods(
-        @RequestBody List<MenuWithFoodsDTO> menuWithFoodsList) {
+    public ResponseEntity<Map<String, Object>> createMenuWithFoods(@RequestBody List<MenuWithFoodsDTO> menuWithFoodsList) {
         int count = datasetService.createMenuWithFoods(menuWithFoodsList);
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "메뉴 및 푸드메뉴 데이터가 성공적으로 생성되었습니다");
+        response.put("message", "메뉴 및 푸드메뉴 데이터가 성공적으로 생성되었습니다..");
         response.put("count", count);
         return ResponseEntity.ok(response);
     }
-
-    @Override
     @PostMapping("/createfeedback")
-    public ResponseEntity<Map<String, Object>> createFeedback(
-        @RequestBody List<FeedBackDTO> feedbacks) {
+    public ResponseEntity<Map<String, Object>> createFeedback(@RequestBody List<FeedBackDTO> feedbacks) {
         int count = datasetService.createFeedback(feedbacks);
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "피드백 데이터가 성공적으로 생성되었습니다");
+        response.put("message", "피드백 데이터가 성공적으로 생성되었습니다..");
         response.put("count", count);
         return ResponseEntity.ok(response);
     }
-
-    @Override
     @PostMapping("/createfeedback/random")
     public ResponseEntity<Map<String, Object>> createRandomFeedback() {
         int count = datasetService.createRandomFeedback();
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "랜덤 피드백 데이터가 성공적으로 생성되었습니다");
+        response.put("message", "랜덤 피드백 데이터가 성공적으로 생성되었습니다..");
         response.put("count", count);
         return ResponseEntity.ok(response);
     }
 
-    @Override
     @GetMapping("allmenu")
     public ResponseEntity<List<Menu>> getAllMenus() {
         List<Menu> menus = datasetService.getAllMenus();
         return ResponseEntity.ok(menus);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<Map<String, String>> testEndpoint() {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "test2!");
+        return ResponseEntity.ok(response);
     }
 }
