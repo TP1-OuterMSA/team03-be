@@ -3,15 +3,14 @@ package com.example.SchoolLunchReport.statistics.service;
 import static com.example.SchoolLunchReport.statistics.domain.type.PeriodType.MONTHLY;
 import static com.example.SchoolLunchReport.statistics.domain.type.PeriodType.WEEKLY;
 
+import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedRankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedStatisticsResponse;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse;
 import com.example.SchoolLunchReport.statistics.domain.entity.FeedBack;
-import com.example.SchoolLunchReport.statistics.domain.entity.FoodRank;
+import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.domain.type.RankType;
 import com.example.SchoolLunchReport.statistics.support.FeedBackImpl;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedRankMenuResponseDto;
-import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.support.RankImpl;
 import java.time.LocalDate;
 import java.util.List;
@@ -66,13 +65,7 @@ public class StatisticsService {
 
     public List<RankMenuResponseDto> getTrendingMenu(PeriodType periodType) {
         LocalDate today = LocalDate.now();
-
         LocalDate conditionDate = periodType.getStartOfThisPeriod(today);
-
-        List<FoodRank> foodRankList = rankImpl.getTrendingMenu(conditionDate, periodType);
-
-        return foodRankList.stream()
-            .map(RankMenuResponseDto::from)
-            .toList();
+        return rankImpl.getTrendingMenu(conditionDate, periodType);
     }
 }

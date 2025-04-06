@@ -16,7 +16,7 @@ public class RankSchedulerTest {
     @Test
     public void 주간_랭크_계산_테스트() {
         // 테스트용 날짜 설정
-        LocalDate registerDate = LocalDate.of(2025, 4, 13); // 일요일
+        LocalDate registerDate = LocalDate.of(2025, 4, 6); // 일요일
         LocalDate preDate = registerDate.minusWeeks(1);
 
         rankScheduler.calculateAndSaveRank(PeriodType.WEEKLY, registerDate, preDate);

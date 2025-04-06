@@ -1,10 +1,10 @@
 package com.example.SchoolLunchReport.statistics.support;
 
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse.ScoreCount;
 import com.example.SchoolLunchReport.statistics.domain.entity.FeedBack;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.domain.entity.FoodRank;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.domain.type.RankType;
@@ -47,8 +47,8 @@ public class RankImpl {
 
     private static List<RankMenuResponseDto> getRankMenuResponseDtoList(
         List<FoodRank> topFoodRanks) {
-        return topFoodRanks.stream()
-            .map(RankMenuResponseDto::from)
+        return IntStream.range(0, topFoodRanks.size())
+            .mapToObj(i -> RankMenuResponseDto.of(topFoodRanks.get(i), i + 1))
             .toList();
     }
 
@@ -70,11 +70,13 @@ public class RankImpl {
             .build();
     }
 
-    public List<FoodRank> getTrendingMenu(LocalDate conditionDate, PeriodType periodType) {
-        return rankJpaRepo.findTop5ByRankGapDesc(
+    public List<RankMenuResponseDto> getTrendingMenu(LocalDate conditionDate,
+        PeriodType periodType) {
+        List<FoodRank> foodRankList = rankJpaRepo.findTop5ByRankGapDesc(
             periodType,
             conditionDate,
             PageRequest.of(0, 5));
+        return getRankMenuResponseDtoList(foodRankList);
     }
 
     public FoodRank findByFoodAndPeriodTypeAndStartPeriod(Food food, PeriodType periodType,
