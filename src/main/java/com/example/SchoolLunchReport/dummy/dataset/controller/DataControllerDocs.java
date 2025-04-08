@@ -3,10 +3,13 @@ package com.example.SchoolLunchReport.dummy.dataset.controller;
 
 import com.example.SchoolLunchReport.dummy.dataset.dto.FeedBackDTO;
 import com.example.SchoolLunchReport.dummy.dataset.dto.MenuWithFoodsDTO;
+import com.example.SchoolLunchReport.global.response.ApiResponse;
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.product.menu.domain.entity.Menu;
+import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +30,11 @@ public interface DataControllerDocs {
         @RequestBody List<FeedBackDTO> feedbacks);
 
     @Operation(summary = "랜덤 피드벡 초기화")
-    ResponseEntity<Map<String, Object>> createRandomFeedback();
+    ResponseEntity<Map<String, Object>> createRandomFeedback(LocalDate registerDate);
 
     @Operation(summary = "모든 메뉴 조회")
     ResponseEntity<List<Menu>> getAllMenus();
 
-
+    @Operation(summary = "주간 rank 초기화")
+    ApiResponse<?> createRankWeekly(LocalDate registerDate, PeriodType periodType);
 }
