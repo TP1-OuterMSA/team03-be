@@ -97,7 +97,7 @@ public class DatasetController implements DataControllerDocs {
     @GetMapping("/test")
     public ResponseEntity<Map<String, String>> testEndpoint() {
         Map<String, String> response = new HashMap<>();
-        response.put("message", "test3!");
+        response.put("message", "test4 7:11");
         return ResponseEntity.ok(response);
     }
 }
