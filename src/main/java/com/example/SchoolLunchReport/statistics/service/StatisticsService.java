@@ -134,6 +134,4 @@ public class StatisticsService {
             .ranking(currentRank)
             .build();
     }
-
-
 }
