@@ -1,7 +1,7 @@
 package com.example.SchoolLunchReport.domain.statistics;
 
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
-import com.example.SchoolLunchReport.statistics.support.RankScheduler;
+import com.example.SchoolLunchReport.statistics.service.StatisticsService;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class RankSchedulerTest {
 
     @Autowired
-    private RankScheduler rankScheduler;
+    private StatisticsService statisticsService;
 
     @Test
     public void 주간_랭크_계산_테스트() {
@@ -19,7 +19,7 @@ public class RankSchedulerTest {
         LocalDate registerDate = LocalDate.of(2025, 4, 6); // 일요일
         LocalDate preDate = registerDate.minusWeeks(1);
 
-        rankScheduler.calculateAndSaveRank(PeriodType.WEEKLY, registerDate, preDate);
+        statisticsService.calculateAndSaveRank(PeriodType.WEEKLY, registerDate);
 
         // 결과 확인은 DB 확인 or 로그 확인
     }
@@ -29,6 +29,6 @@ public class RankSchedulerTest {
         LocalDate registerDate = LocalDate.of(2025, 4, 1); // 4월 1일
         LocalDate preDate = registerDate.minusMonths(1);
 
-        rankScheduler.calculateAndSaveRank(PeriodType.MONTHLY, registerDate, preDate);
+        statisticsService.calculateAndSaveRank(PeriodType.MONTHLY, registerDate);
     }
 }
