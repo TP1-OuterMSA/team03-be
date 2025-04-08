@@ -24,10 +24,25 @@ public interface RankJpaRepo extends JpaRepository<FoodRank, Long> {
 
     @Query("SELECT f FROM FoodRank f " +
         "WHERE f.periodType = :periodType AND f.startPeriod = :startPeriod " +
-        "ORDER BY ABS(f.ranking - COALESCE(f.previousRanking, 0)) DESC")
+        "AND f.previousRanking IS NOT NULL " +
+        "ORDER BY (f.previousRanking - f.ranking) DESC")
     List<FoodRank> findTop5ByRankGapDesc(
         @Param("periodType") PeriodType periodType,
         @Param("startPeriod") LocalDate startPeriod,
         Pageable pageable
     );
+
+    @Query("SELECT f FROM FoodRank f " +
+        "WHERE f.periodType = :periodType " +
+        "AND f.startPeriod = :startPeriod " +
+        "AND (f.previousRanking - f.ranking) >= 5 " +
+        "ORDER BY (f.previousRanking - f.ranking) DESC")
+    List<FoodRank> findTop5ByRankGapDescFiltered(
+        @Param("periodType") PeriodType periodType,
+        @Param("startPeriod") LocalDate startPeriod,
+        Pageable pageable
+    );
+
+    List<FoodRank> findByPeriodTypeAndStartPeriod(PeriodType periodType, LocalDate startPeriod);
+
 }

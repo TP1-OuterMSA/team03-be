@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class FoodRank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    
+
     @ManyToOne
     Food food;
     LocalDate startPeriod;
@@ -28,6 +29,8 @@ public class FoodRank {
     Integer ranking;
     Double score;
     Integer previousRanking;
+
+    private static final Integer NOT_CHANGE = 0;
 
     @Builder
     public FoodRank(Food food, LocalDate startPeriod, PeriodType periodType, Integer ranking,
@@ -42,6 +45,9 @@ public class FoodRank {
     }
 
     public Integer getRankGap() {
-        return ranking - previousRanking;
+        if (Objects.isNull(previousRanking)) {
+            return NOT_CHANGE;
+        }
+        return previousRanking - ranking;
     }
 }

@@ -1,4 +1,5 @@
 package com.example.SchoolLunchReport.dummy.dataset.service;
+
 import com.example.SchoolLunchReport.dummy.dataset.dto.FeedBackDTO;
 import com.example.SchoolLunchReport.dummy.dataset.dto.MenuWithFoodsDTO;
 import com.example.SchoolLunchReport.product.FoodMenu.domain.entity.FoodMenu;
@@ -10,34 +11,39 @@ import com.example.SchoolLunchReport.product.menu.domain.entity.Menu;
 import com.example.SchoolLunchReport.product.menu.repository.MenuJpaRepository;
 import com.example.SchoolLunchReport.statistics.domain.entity.FeedBack;
 import com.example.SchoolLunchReport.statistics.repository.FeedBackJpaRepo;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DatasetService {
+
     private final FoodJpaRepository foodJpaRepository;
     private final FoodMenuJpaRepository foodMenuJpaRepository;
     private final MenuJpaRepository menuJpaRepository;
     private final FeedBackJpaRepo feedBackJpaRepo;
+
     public DatasetService(FoodJpaRepository foodJpaRepository,
-                          FoodMenuJpaRepository foodMenuJpaRepository,
-                          MenuJpaRepository menuJpaRepository,
-                          FeedBackJpaRepo feedBackJpaRepo) {
+        FoodMenuJpaRepository foodMenuJpaRepository,
+        MenuJpaRepository menuJpaRepository,
+        FeedBackJpaRepo feedBackJpaRepo) {
         this.foodJpaRepository = foodJpaRepository;
         this.foodMenuJpaRepository = foodMenuJpaRepository;
         this.menuJpaRepository = menuJpaRepository;
         this.feedBackJpaRepo = feedBackJpaRepo;
     }
+
     @Transactional
     public int createFoodData(List<Food> foods) {
         List<Food> savedFoods = foodJpaRepository.saveAll(foods);
         return savedFoods.size();
     }
+
     @Transactional
     public int createMenuWithFoods(List<MenuWithFoodsDTO> menuWithFoodsList) {
         List<Menu> menus = new ArrayList<>();
@@ -48,7 +54,8 @@ public class DatasetService {
         }
         for (Category category : Category.values()) {
             if (foodsByCategory.get(category).isEmpty()) {
-                throw new IllegalStateException(category + " 카테고리에 음식이 없습니다. 모든 카테고리에 최소 한 개 이상의 음식을 생성해주세요.");
+                throw new IllegalStateException(
+                    category + " 카테고리에 음식이 없습니다. 모든 카테고리에 최소 한 개 이상의 음식을 생성해주세요.");
             }
         }
         for (MenuWithFoodsDTO dto : menuWithFoodsList) {
@@ -60,7 +67,8 @@ public class DatasetService {
             Menu savedMenu = menuJpaRepository.save(menu);
             for (Category category : Category.values()) {
                 List<Food> foodsInCategory = foodsByCategory.get(category);
-                Food selectedFood = foodsInCategory.get(new Random().nextInt(foodsInCategory.size()));
+                Food selectedFood = foodsInCategory.get(
+                    new Random().nextInt(foodsInCategory.size()));
                 FoodMenu foodMenu = new FoodMenu();
                 foodMenu.setMenu(savedMenu);
                 foodMenu.setFood(selectedFood);
@@ -70,6 +78,7 @@ public class DatasetService {
         foodMenuJpaRepository.saveAll(foodMenus);
         return menuWithFoodsList.size();
     }
+
     private void setField(Object object, String fieldName, Object value) {
         try {
             java.lang.reflect.Field field = object.getClass().getDeclaredField(fieldName);
@@ -79,6 +88,7 @@ public class DatasetService {
             throw new RuntimeException("필드 " + fieldName + " 설정 실패", e);
         }
     }
+
     @Transactional
     public int createFeedback(List<FeedBackDTO> feedbacks) {
         List<FeedBack> feedBackList = new ArrayList<>();
@@ -87,19 +97,24 @@ public class DatasetService {
                 throw new IllegalArgumentException("점수는 1~5 사이의 값이어야 합니다: " + dto.getScore());
             }
             FoodMenu foodMenu = foodMenuJpaRepository.findById(dto.getFoodMenuId())
-                    .orElseThrow(() -> new IllegalArgumentException("ID가 " + dto.getFoodMenuId() + "인 푸드메뉴를 찾을 수 없습니다"));
-            if (feedBackJpaRepo.existsByFoodMenuId(dto.getFoodMenuId())) continue;
+                .orElseThrow(() -> new IllegalArgumentException(
+                    "ID가 " + dto.getFoodMenuId() + "인 푸드메뉴를 찾을 수 없습니다"));
+            if (feedBackJpaRepo.existsByFoodMenuId(dto.getFoodMenuId())) {
+                continue;
+            }
             FeedBack feedBack = FeedBack.builder()
-                    .score( dto.getScore())
-                    .build();
+                .score(dto.getScore())
+                .foodMenu(foodMenu)
+                .build();
             setField(feedBack, "foodMenu", foodMenu);
             feedBackList.add(feedBack);
         }
         feedBackJpaRepo.saveAll(feedBackList);
         return feedBackList.size();
     }
+
     @Transactional
-    public int createRandomFeedback() {
+    public int createRandomFeedback(LocalDate registerDate) {
         List<FoodMenu> allFoodMenus = foodMenuJpaRepository.findAll();
         List<FeedBack> feedBackList = new ArrayList<>();
         Random random = new Random();
@@ -107,16 +122,18 @@ public class DatasetService {
             if (feedBackJpaRepo.existsByFoodMenuId(foodMenu.getId())) {
                 continue;
             }
-            int randomScore = random.nextInt(5) + 1;
+            double randomScore = random.nextInt(5) + 1;
             FeedBack feedBack = FeedBack.builder()
-                    .score(randomScore)
-                    .build();
-            setField(feedBack, "foodMenu", foodMenu);
+                .score(randomScore)
+                .foodMenu(foodMenu)
+                .createdAt(registerDate)
+                .build();
             feedBackList.add(feedBack);
         }
         feedBackJpaRepo.saveAll(feedBackList);
         return feedBackList.size();
     }
+
     @Transactional(readOnly = true)
     public List<Menu> getAllMenus() {
         return menuJpaRepository.findAll();
