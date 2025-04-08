@@ -9,6 +9,7 @@ import com.example.SchoolLunchReport.global.response.ApiResponse;
 import com.example.SchoolLunchReport.global.response.type.SuccessType;
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.product.menu.domain.entity.Menu;
+import com.example.SchoolLunchReport.statistics.domain.entity.FoodRank;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.service.StatisticsService;
 import java.time.LocalDate;
@@ -70,20 +71,27 @@ public class DatasetController implements DataControllerDocs {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("allmenu")
+    @GetMapping("/allmenu")
     public ResponseEntity<List<Menu>> getAllMenus() {
         List<Menu> menus = datasetService.getAllMenus();
         return ResponseEntity.ok(menus);
     }
 
     @Override
-    @PostMapping("rank/weekly")
-    public ApiResponse<?> createRankWeekly(
+    @PostMapping("/rank")
+    public ApiResponse<?> createRank(
         @RequestParam LocalDate registerDate,
         PeriodType periodType
     ) {
         statisticsService.calculateAndSaveRank(periodType, registerDate);
         return ApiResponse.success(SuccessType.SUCCESS);
+    }
+
+    @Override
+    @GetMapping("/rank")
+    public ApiResponse<?> getRankList(LocalDate registerDate, PeriodType periodType) {
+        List<FoodRank> rankList = statisticsService.getRankList(registerDate, periodType);
+        return ApiResponse.success(SuccessType.SUCCESS, rankList);
     }
 
     @GetMapping("/test")
