@@ -35,6 +35,9 @@ public interface DataControllerDocs {
     @Operation(summary = "모든 메뉴 조회")
     ResponseEntity<List<Menu>> getAllMenus();
 
-    @Operation(summary = "주간 rank 초기화")
-    ApiResponse<?> createRankWeekly(LocalDate registerDate, PeriodType periodType);
+    @Operation(summary = "rank 초기화")
+    ApiResponse<?> createRank(LocalDate registerDate, PeriodType periodType);
+
+    @Operation(summary = "모든 rank 반환")
+    ApiResponse<?> getRankList(LocalDate registerDate, PeriodType periodType);
 }

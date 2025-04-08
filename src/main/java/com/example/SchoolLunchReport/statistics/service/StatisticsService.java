@@ -25,8 +25,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class StatisticsService {
 
@@ -37,6 +39,7 @@ public class StatisticsService {
     final RankSaver rankSaver;
     final RankFilter rankFilter;
 
+    @Transactional(readOnly = true)
     public CombinedRankMenuResponseDto getRankMenu(PeriodType periodType, LocalDate date) {
         LocalDate targetDate = periodType.getStartOfThisPeriod(date);
 
@@ -52,6 +55,7 @@ public class StatisticsService {
     }
 
 
+    @Transactional(readOnly = true)
     public CombinedStatisticsResponse getStatistics(LocalDate date) {
 
         LocalDate startWeekDate = WEEKLY.getStartOfThisPeriod(date);
@@ -79,6 +83,7 @@ public class StatisticsService {
         return new CombinedStatisticsResponse(statisticsResponseWeekly, statisticsResponseMonthly);
     }
 
+    @Transactional(readOnly = true)
     public List<RankMenuResponseDto> getTrendingMenu(PeriodType periodType) {
         LocalDate today = LocalDate.now();
         LocalDate conditionDate = periodType.getStartOfThisPeriod(today);
@@ -133,5 +138,9 @@ public class StatisticsService {
             .periodType(periodType)
             .ranking(currentRank)
             .build();
+    }
+
+    public List<FoodRank> getRankList(LocalDate registerDate, PeriodType periodType) {
+        return rankReader.findByPeriodTypeAndStartPeriod(periodType, registerDate);
     }
 }
