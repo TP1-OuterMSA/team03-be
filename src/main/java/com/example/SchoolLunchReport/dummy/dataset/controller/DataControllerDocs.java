@@ -34,7 +34,7 @@ public interface DataControllerDocs {
 
     @Operation(summary = "모든 메뉴 조회")
     ResponseEntity<List<Menu>> getAllMenus();
-
+  
     @Operation(summary = "rank 초기화")
     ApiResponse<?> createRank(LocalDate registerDate, PeriodType periodType);
 
