@@ -13,6 +13,7 @@ public class RankFilter {
     public List<FoodRank> filterByRankGapGreaterThanOrEqualCondition(List<FoodRank> foodRankList) {
         return foodRankList.stream()
             .filter(foodRank -> foodRank.getRankGap() >= TREND_CONDITION)
+            .limit(3)
             .collect(Collectors.toList());
     }
 }
