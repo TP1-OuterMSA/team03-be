@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,14 +21,15 @@ public class FeedBack extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer score;
+    private Double score;
     @ManyToOne
     private FoodMenu foodMenu;
 
     @Builder
-    public FeedBack(Long id, Integer score, FoodMenu foodMenu) {
-        this.id = id;
+    public FeedBack(Double score, FoodMenu foodMenu, LocalDate createdAt) {
         this.score = score;
+        this.foodMenu = foodMenu;
+        this.createdAt = createdAt;
     }
 
     public Food getFood() {
