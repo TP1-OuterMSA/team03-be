@@ -3,7 +3,6 @@ package com.example.SchoolLunchReport.statistics.domain.type;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import org.springframework.cglib.core.Local;
 
 public enum PeriodType {
     WEEKLY, MONTHLY;
@@ -15,7 +14,8 @@ public enum PeriodType {
         };
     }
 
-    public LocalDate getLastOfThisPeriod(LocalDate date) {
+    public LocalDate getStartOfPreviousPeriod(LocalDate date) {
+        // 리팩토링 필요.
         return switch (this) {
             case WEEKLY ->
                 date.minusWeeks(1).with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));

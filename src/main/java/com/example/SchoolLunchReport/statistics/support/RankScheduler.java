@@ -32,7 +32,7 @@ public class RankScheduler {
 
         LocalDate thisMonth = LocalDate.now(ZoneId.of("Asia/Seoul"));
         PeriodType periodType = PeriodType.MONTHLY;
-        LocalDate preMonth = periodType.getLastOfThisPeriod(thisMonth);
+        LocalDate preMonth = periodType.getStartOfPreviousPeriod(thisMonth);
         statisticsService.calculateAndSaveRank(periodType, thisMonth);
 
     }
