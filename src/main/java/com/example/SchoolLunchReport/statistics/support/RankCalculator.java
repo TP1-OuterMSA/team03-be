@@ -1,7 +1,7 @@
 package com.example.SchoolLunchReport.statistics.support;
 
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse.ScoreCount;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.response.StatisticsResponse.ScoreCount;
 import com.example.SchoolLunchReport.statistics.domain.entity.FeedBack;
 import com.example.SchoolLunchReport.statistics.domain.entity.FoodRank;
 import java.util.Comparator;
@@ -83,5 +83,14 @@ public class RankCalculator {
         } else {
             return (rankings.get(size / 2 - 1) + rankings.get(size / 2)) / 2;
         }
+    }
+
+    public Double getScoreAverage(List<FeedBack> feedBackList) {
+        double average = feedBackList.stream()
+            .mapToDouble(FeedBack::getScore)
+            .average()
+            .orElse(0.0);
+
+        return Math.round(average * 100) / 100.0;
     }
 }
