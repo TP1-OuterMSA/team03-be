@@ -14,7 +14,13 @@ public class FeedBackReader {
     final FeedBackJpaRepo feedBackJpaRepo;
 
     public List<FeedBack> getFeedBackInBoundary(LocalDate startDate, LocalDate endDate) {
-        return feedBackJpaRepo.findByCreatedAtBetween(startDate, endDate.minusDays(1));
+//        return feedBackJpaRepo.findByCreatedAtBetween(startDate, endDate.minusDays(1));
+        return feedBackJpaRepo.findByCreatedAtBetween(startDate, endDate);
+    }
+
+
+    public List<FeedBack> getFeedBackInBoundary(LocalDate startDate) {
+        return feedBackJpaRepo.findByCreatedAt(startDate);
     }
 
 }

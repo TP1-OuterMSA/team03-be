@@ -4,15 +4,17 @@ import static com.example.SchoolLunchReport.statistics.domain.type.PeriodType.MO
 import static com.example.SchoolLunchReport.statistics.domain.type.PeriodType.WEEKLY;
 
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedRankMenuResponseDto;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedStatisticsResponse;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse.ScoreCount;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.response.CombinedRankMenuResponseDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.response.CombinedStatisticsResponse;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.response.RankMenuResponseDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.response.StatisticsResponse;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.response.StatisticsResponse.ScoreCount;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.response.TrackingResponseDto;
 import com.example.SchoolLunchReport.statistics.domain.entity.FeedBack;
 import com.example.SchoolLunchReport.statistics.domain.entity.FoodRank;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.support.FeedBackReader;
+import com.example.SchoolLunchReport.statistics.support.FeedBackTracker;
 import com.example.SchoolLunchReport.statistics.support.RankCalculator;
 import com.example.SchoolLunchReport.statistics.support.RankFilter;
 import com.example.SchoolLunchReport.statistics.support.RankImpl;
@@ -38,7 +40,8 @@ public class StatisticsService {
     final RankCalculator rankCalculator;
     final RankSaver rankSaver;
     final RankFilter rankFilter;
-
+    final FeedBackTracker feedBackTracker;
+    
     @Transactional(readOnly = true)
     public CombinedRankMenuResponseDto getRankMenu(PeriodType periodType, LocalDate date) {
         LocalDate targetDate = periodType.getStartOfThisPeriod(date);
@@ -59,11 +62,11 @@ public class StatisticsService {
     public CombinedStatisticsResponse getStatistics(LocalDate date) {
 
         LocalDate startWeekDate = WEEKLY.getStartOfThisPeriod(date);
-        LocalDate endWeekDate = WEEKLY.getLastOfThisPeriod(date);
+        LocalDate endWeekDate = WEEKLY.getStartOfPreviousPeriod(date);
         List<FeedBack> feedBackListWeekly = feedBackReader.getFeedBackInBoundary(endWeekDate,
             startWeekDate);
 
-        LocalDate startMonthDate = MONTHLY.getLastOfThisPeriod(date);
+        LocalDate startMonthDate = MONTHLY.getStartOfPreviousPeriod(date);
         LocalDate endMonthDate = MONTHLY.getStartOfThisPeriod(date);
         List<FeedBack> feedBackListMonthly = feedBackReader.getFeedBackInBoundary(startMonthDate,
             endMonthDate);
@@ -96,7 +99,7 @@ public class StatisticsService {
 
 
     public void calculateAndSaveRank(PeriodType periodType, LocalDate registerDate) {
-        LocalDate preDate = periodType.getLastOfThisPeriod(registerDate);
+        LocalDate preDate = periodType.getStartOfPreviousPeriod(registerDate);
 
         List<FeedBack> feedBackList = feedBackReader.getFeedBackInBoundary(preDate, registerDate);
         Map<Food, Double> foodScoreAverageMap = rankCalculator.calculateFoodScoreAverage(
@@ -142,5 +145,9 @@ public class StatisticsService {
 
     public List<FoodRank> getRankList(LocalDate registerDate, PeriodType periodType) {
         return rankReader.findByPeriodTypeAndStartPeriod(periodType, registerDate);
+    }
+
+    public TrackingResponseDto getTrackingEvaluation(LocalDate localDate) {
+        return feedBackTracker.getTrackingEvaluation(localDate);
     }
 }

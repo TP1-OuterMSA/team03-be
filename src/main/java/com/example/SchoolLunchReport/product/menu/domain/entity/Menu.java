@@ -1,6 +1,5 @@
 package com.example.SchoolLunchReport.product.menu.domain.entity;
 
-import com.example.SchoolLunchReport.global.common.BaseTimeEntity;
 import com.example.SchoolLunchReport.product.menu.domain.type.MealType;
 import jakarta.persistence.*;
 

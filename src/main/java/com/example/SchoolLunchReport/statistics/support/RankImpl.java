@@ -1,6 +1,6 @@
 package com.example.SchoolLunchReport.statistics.support;
 
-import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.response.RankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.domain.entity.FoodRank;
 import java.util.List;
 import java.util.stream.IntStream;

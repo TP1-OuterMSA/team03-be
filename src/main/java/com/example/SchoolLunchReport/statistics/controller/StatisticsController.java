@@ -4,13 +4,12 @@ import static com.example.SchoolLunchReport.global.common.Constants.ANALYTICS_TE
 
 import com.example.SchoolLunchReport.global.response.ApiResponse;
 import com.example.SchoolLunchReport.global.response.type.SuccessType;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedRankMenuResponseDto;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.response.CombinedRankMenuResponseDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.response.RankMenuResponseDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.response.TrackingResponseDto;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.service.StatisticsService;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -62,4 +61,12 @@ public class StatisticsController implements StatisticsControllerDocs {
             periodType));
     }
 
+    @Override
+    @GetMapping("/tracking")
+    public ApiResponse<TrackingResponseDto> getTrackingEvaluation(
+        LocalDate localDate
+    ) {
+        return ApiResponse.success(SuccessType.SUCCESS, statisticsService.getTrackingEvaluation(
+            localDate));
+    }
 }
