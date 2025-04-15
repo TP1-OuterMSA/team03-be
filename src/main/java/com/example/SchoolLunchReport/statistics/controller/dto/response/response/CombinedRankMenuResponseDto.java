@@ -1,4 +1,4 @@
-package com.example.SchoolLunchReport.statistics.controller.dto.response;
+package com.example.SchoolLunchReport.statistics.controller.dto.response.response;
 
 import java.util.List;
 import lombok.Builder;

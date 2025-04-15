@@ -1,4 +1,4 @@
-package com.example.SchoolLunchReport.statistics.controller.dto.response;
+package com.example.SchoolLunchReport.statistics.controller.dto.response.response;
 
 import com.example.SchoolLunchReport.statistics.domain.entity.FoodRank;
 import lombok.Builder;
