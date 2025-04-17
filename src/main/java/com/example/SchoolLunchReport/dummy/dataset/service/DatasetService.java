@@ -1,42 +1,43 @@
 package com.example.SchoolLunchReport.dummy.dataset.service;
 
+import com.example.SchoolLunchReport.client.LLMClient;
+import com.example.SchoolLunchReport.client.dto.request.AdjustMenuNameRequestDto;
 import com.example.SchoolLunchReport.dummy.dataset.dto.FeedBackDTO;
 import com.example.SchoolLunchReport.dummy.dataset.dto.MenuWithFoodsDTO;
 import com.example.SchoolLunchReport.product.FoodMenu.domain.entity.FoodMenu;
 import com.example.SchoolLunchReport.product.FoodMenu.repository.FoodMenuJpaRepository;
+import com.example.SchoolLunchReport.statistics.domain.desired.entity.DesiredFood;
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.product.food.domain.type.Category;
+import com.example.SchoolLunchReport.statistics.domain.desired.repo.DesiredFoodJpaRepo;
 import com.example.SchoolLunchReport.product.food.repository.FoodJpaRepository;
 import com.example.SchoolLunchReport.product.menu.domain.entity.Menu;
 import com.example.SchoolLunchReport.product.menu.repository.MenuJpaRepository;
-import com.example.SchoolLunchReport.statistics.domain.entity.FeedBack;
+import com.example.SchoolLunchReport.statistics.domain.feedback.entity.FeedBack;
 import com.example.SchoolLunchReport.statistics.repository.FeedBackJpaRepo;
+import com.example.SchoolLunchReport.statistics.support.RankImpl;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class DatasetService {
 
     private final FoodJpaRepository foodJpaRepository;
     private final FoodMenuJpaRepository foodMenuJpaRepository;
     private final MenuJpaRepository menuJpaRepository;
     private final FeedBackJpaRepo feedBackJpaRepo;
+    private final LLMClient llmClient;
+    private final DesiredFoodJpaRepo desiredFoodJpaRepo;
+    private final RankImpl rankImpl;
 
-    public DatasetService(FoodJpaRepository foodJpaRepository,
-        FoodMenuJpaRepository foodMenuJpaRepository,
-        MenuJpaRepository menuJpaRepository,
-        FeedBackJpaRepo feedBackJpaRepo) {
-        this.foodJpaRepository = foodJpaRepository;
-        this.foodMenuJpaRepository = foodMenuJpaRepository;
-        this.menuJpaRepository = menuJpaRepository;
-        this.feedBackJpaRepo = feedBackJpaRepo;
-    }
 
     @Transactional
     public int createFoodData(List<Food> foods) {
@@ -139,4 +140,45 @@ public class DatasetService {
         return menuJpaRepository.findAll();
     }
 
+    @Transactional
+    public List<DesiredFood> createDesiredFoods() {
+        List<String> desiredFoodData = List.of(
+            // 제육볶음 변형 12개
+            "제육볶음", "제육보끔", "제육뽁음", "제육볶음!", "제육볶음2", "제육_bokkeum",
+            "제육볶음!!", "제육볶음55", "제육볽음", "jeyukbokkeum", "제욱볶음", "제육٥٦",
+
+            // 김치찌개 변형 12개
+            "김치찌개", "김치찌깨", "김치찌개?", "김치찌개1", "김치지개", "ㅣ김치찌개",
+            "김치찌개!!", "Kimchi jjigae", "김치찌개99", "김치치개", "김치ㅉ개", "김치 찌개",
+
+            // 불고기 변형 12개
+            "불고기", "불꼬기", "불고기?", "불고기123", "불고1", "bulgogi",
+            "불고기!!", "불고기★", "불고기88", "불고기맛", "bulgogi66", "불고기찌",
+
+            // 비빔밥 변형 6개
+            "비빔밥", "비빔박", "비빔밥!", "비빔밥2", "ㅂㅣ빔밥", "bibimbap",
+
+            // 떡볶이 변형 6개
+            "떡볶이", "떡뽁이", "떡볶이?", "떡볶이3", "떡뽁이!", "ddeokbokki",
+
+            // 순두부찌개 변형 6개
+            "순두부찌개", "순두부지개", "순두부찌개@", "순두부찌개4", "ㅅㅜㄴ두부찌개", "sundubujjigae",
+
+            // 칼국수 변형 6개
+            "칼국수", "칼꾹수", "칼국수?", "칼국수5", "ㅋㄹ국수", "kalguksu",
+
+            // 김밥 변형 6개
+            "김밥", "김밥!", "김박", "김밥6", "ㄱㅣ밥", "gimbap",
+
+            // 라면 변형 6개
+            "라면", "라민", "라면?", "라면7", "ㄹㅏ면", "ramen"
+        );
+        List<DesiredFood> desiredFoodList = new ArrayList<>();
+        for (String desiredFood : desiredFoodData) {
+            String adjusted = llmClient.adjustMenuApi(AdjustMenuNameRequestDto.from(desiredFood));
+            desiredFoodList.add(DesiredFood.toEntity(adjusted));
+        }
+        desiredFoodJpaRepo.saveAll(desiredFoodList);
+        return desiredFoodList;
+    }
 }
