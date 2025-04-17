@@ -1,4 +1,4 @@
-package com.example.SchoolLunchReport.statistics.domain.entity;
+package com.example.SchoolLunchReport.statistics.domain.rank.entity;
 
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;

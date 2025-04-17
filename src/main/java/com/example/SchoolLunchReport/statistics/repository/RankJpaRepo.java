@@ -1,7 +1,7 @@
 package com.example.SchoolLunchReport.statistics.repository;
 
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
-import com.example.SchoolLunchReport.statistics.domain.entity.FoodRank;
+import com.example.SchoolLunchReport.statistics.domain.rank.entity.FoodRank;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import java.time.LocalDate;
 import java.util.List;

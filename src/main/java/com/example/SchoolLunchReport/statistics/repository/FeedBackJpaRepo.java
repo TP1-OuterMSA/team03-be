@@ -1,6 +1,6 @@
 package com.example.SchoolLunchReport.statistics.repository;
 
-import com.example.SchoolLunchReport.statistics.domain.entity.FeedBack;
+import com.example.SchoolLunchReport.statistics.domain.feedback.entity.FeedBack;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

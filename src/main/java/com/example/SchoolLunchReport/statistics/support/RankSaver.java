@@ -1,6 +1,6 @@
 package com.example.SchoolLunchReport.statistics.support;
 
-import com.example.SchoolLunchReport.statistics.domain.entity.FoodRank;
+import com.example.SchoolLunchReport.statistics.domain.rank.entity.FoodRank;
 import com.example.SchoolLunchReport.statistics.repository.RankJpaRepo;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

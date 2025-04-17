@@ -1,9 +1,9 @@
 package com.example.SchoolLunchReport.statistics.support;
 
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.response.StatisticsResponse.ScoreCount;
-import com.example.SchoolLunchReport.statistics.domain.entity.FeedBack;
-import com.example.SchoolLunchReport.statistics.domain.entity.FoodRank;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse.ScoreCount;
+import com.example.SchoolLunchReport.statistics.domain.feedback.entity.FeedBack;
+import com.example.SchoolLunchReport.statistics.domain.rank.entity.FoodRank;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
