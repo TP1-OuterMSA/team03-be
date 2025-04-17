@@ -40,4 +40,7 @@ public interface DataControllerDocs {
 
     @Operation(summary = "모든 rank 반환")
     ApiResponse<?> getRankList(LocalDate registerDate, PeriodType periodType);
+
+    @Operation(summary = "먹고 싶은 메뉴 초기화 API")
+    ApiResponse<?> createDesiredFoods();
 }

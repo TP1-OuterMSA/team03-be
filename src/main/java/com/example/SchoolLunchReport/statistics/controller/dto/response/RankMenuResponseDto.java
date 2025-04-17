@@ -1,6 +1,6 @@
-package com.example.SchoolLunchReport.statistics.controller.dto.response.response;
+package com.example.SchoolLunchReport.statistics.controller.dto.response;
 
-import com.example.SchoolLunchReport.statistics.domain.entity.FoodRank;
+import com.example.SchoolLunchReport.statistics.domain.rank.entity.FoodRank;
 import lombok.Builder;
 
 @Builder

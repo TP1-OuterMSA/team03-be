@@ -1,4 +1,4 @@
-package com.example.SchoolLunchReport.statistics.domain.entity;
+package com.example.SchoolLunchReport.statistics.domain.feedback.entity;
 
 import com.example.SchoolLunchReport.global.common.BaseTimeEntity;
 import com.example.SchoolLunchReport.product.FoodMenu.domain.entity.FoodMenu;

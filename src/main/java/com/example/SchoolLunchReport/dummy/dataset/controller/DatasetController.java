@@ -6,11 +6,12 @@ import com.example.SchoolLunchReport.dummy.dataset.dto.MenuWithFoodsDTO;
 import com.example.SchoolLunchReport.dummy.dataset.service.DatasetService;
 import com.example.SchoolLunchReport.global.response.ApiResponse;
 import com.example.SchoolLunchReport.global.response.type.SuccessType;
+import com.example.SchoolLunchReport.statistics.domain.desired.entity.DesiredFood;
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.product.menu.domain.entity.Menu;
-import com.example.SchoolLunchReport.statistics.domain.entity.FoodRank;
+import com.example.SchoolLunchReport.statistics.domain.rank.entity.FoodRank;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
-import com.example.SchoolLunchReport.statistics.service.StatisticsService;
+import com.example.SchoolLunchReport.statistics.service.StatisticsFacade;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DatasetController implements DataControllerDocs {
 
     private final DatasetService datasetService;
-    private final StatisticsService statisticsService;
+    private final StatisticsFacade statisticsFacade;
 
     @PostMapping("/createfood")
     public ResponseEntity<Map<String, Object>> createFoodData(@RequestBody List<Food> foods) {
@@ -82,16 +83,23 @@ public class DatasetController implements DataControllerDocs {
         @RequestParam LocalDate registerDate,
         PeriodType periodType
     ) {
-        statisticsService.calculateAndSaveRank(periodType, registerDate);
+        statisticsFacade.calculateAndSaveRank(periodType, registerDate);
         return ApiResponse.success(SuccessType.SUCCESS);
     }
 
     @Override
     @GetMapping("/rank")
     public ApiResponse<?> getRankList(LocalDate registerDate, PeriodType periodType) {
-        List<FoodRank> rankList = statisticsService.getRankList(registerDate, periodType);
+        List<FoodRank> rankList = statisticsFacade.getRankList(registerDate, periodType);
         return ApiResponse.success(SuccessType.SUCCESS, rankList);
     }
+    @Override
+    @PostMapping("/desired-foods")
+    public ApiResponse<?> createDesiredFoods() {
+        List<DesiredFood> desiredFoods = datasetService.createDesiredFoods();
+        return ApiResponse.success(SuccessType.SUCCESS,desiredFoods);
+    }
+
 
     @GetMapping("/test")
     public ResponseEntity<Map<String, String>> testEndpoint() {

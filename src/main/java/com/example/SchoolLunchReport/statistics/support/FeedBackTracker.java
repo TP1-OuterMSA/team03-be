@@ -3,8 +3,8 @@ package com.example.SchoolLunchReport.statistics.support;
 import static com.example.SchoolLunchReport.statistics.domain.type.PeriodType.MONTHLY;
 import static com.example.SchoolLunchReport.statistics.domain.type.PeriodType.WEEKLY;
 
-import com.example.SchoolLunchReport.statistics.controller.dto.response.response.TrackingResponseDto;
-import com.example.SchoolLunchReport.statistics.domain.entity.FeedBack;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.TrackingResponseDto;
+import com.example.SchoolLunchReport.statistics.domain.feedback.entity.FeedBack;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;

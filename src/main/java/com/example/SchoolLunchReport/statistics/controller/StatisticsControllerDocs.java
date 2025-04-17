@@ -1,11 +1,13 @@
 package com.example.SchoolLunchReport.statistics.controller;
 
 import com.example.SchoolLunchReport.global.response.ApiResponse;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.response.TrackingResponseDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.DesiredFoodResponseDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.TrackingResponseDto;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
+import java.util.List;
 
 @Tag(name = "순위 관련된 api")
 public interface StatisticsControllerDocs {
@@ -25,4 +27,7 @@ public interface StatisticsControllerDocs {
     ApiResponse<TrackingResponseDto> getTrackingEvaluation(
         LocalDate localDate
     );
+
+    @Operation(summary = "먹고 싶은 메뉴 조회")
+    ApiResponse<List<DesiredFoodResponseDto>> getDesiredFood(LocalDate startDate, LocalDate endDate);
 }

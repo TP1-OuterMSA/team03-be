@@ -1,7 +1,7 @@
 package com.example.SchoolLunchReport.statistics.support;
 
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
-import com.example.SchoolLunchReport.statistics.service.StatisticsService;
+import com.example.SchoolLunchReport.statistics.service.StatisticsFacade;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RankScheduler {
 
-    private final StatisticsService statisticsService;
+    private final StatisticsFacade statisticsFacade;
 
 
     @Transactional
@@ -22,7 +22,7 @@ public class RankScheduler {
 
         LocalDate thisWeek = LocalDate.now(ZoneId.of("Asia/Seoul"));
         PeriodType periodType = PeriodType.WEEKLY;
-        statisticsService.calculateAndSaveRank(periodType, thisWeek);
+        statisticsFacade.calculateAndSaveRank(periodType, thisWeek);
 
     }
 
@@ -33,7 +33,7 @@ public class RankScheduler {
         LocalDate thisMonth = LocalDate.now(ZoneId.of("Asia/Seoul"));
         PeriodType periodType = PeriodType.MONTHLY;
         LocalDate preMonth = periodType.getStartOfPreviousPeriod(thisMonth);
-        statisticsService.calculateAndSaveRank(periodType, thisMonth);
+        statisticsFacade.calculateAndSaveRank(periodType, thisMonth);
 
     }
 

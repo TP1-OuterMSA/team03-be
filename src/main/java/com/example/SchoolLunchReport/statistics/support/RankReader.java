@@ -1,7 +1,10 @@
 package com.example.SchoolLunchReport.statistics.support;
 
-import com.example.SchoolLunchReport.statistics.domain.entity.FoodRank;
+import static com.example.SchoolLunchReport.statistics.domain.type.RankType.TOP;
+
+import com.example.SchoolLunchReport.statistics.domain.rank.entity.FoodRank;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
+import com.example.SchoolLunchReport.statistics.domain.type.RankType;
 import com.example.SchoolLunchReport.statistics.repository.RankJpaRepo;
 import java.time.LocalDate;
 import java.util.List;
@@ -15,21 +18,22 @@ public class RankReader {
 
     private final RankJpaRepo rankJpaRepo;
 
-    public List<FoodRank> getTop5FoodRank(PeriodType periodType, LocalDate startPeriod) {
-        return rankJpaRepo.findTop5ByPeriodTypeAndStartPeriodOrderByRankingAsc(
-            periodType,
-            startPeriod
-        );
-    }
-
-    public List<FoodRank> getBottom5FoodRank(PeriodType periodType, LocalDate startPeriod) {
-        return rankJpaRepo.findTop5ByPeriodTypeAndStartPeriodOrderByRankingDesc
-            (
+    public List<FoodRank> getFoodRank(PeriodType periodType, LocalDate startPeriod,
+        RankType rankType) {
+        if (rankType == TOP) {
+            return rankJpaRepo.findTop5ByPeriodTypeAndStartPeriodOrderByRankingAsc(
                 periodType,
                 startPeriod
             );
+        } else {
+            return rankJpaRepo.findTop5ByPeriodTypeAndStartPeriodOrderByRankingDesc
+                (
+                    periodType,
+                    startPeriod
+                );
+        }
     }
-
+    
     public List<FoodRank> getTop10ByRankGapDesc(PeriodType periodType, LocalDate startPeriod) {
         return rankJpaRepo.findTop5ByRankGapDesc(
             periodType,

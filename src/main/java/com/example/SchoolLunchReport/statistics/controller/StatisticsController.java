@@ -4,11 +4,12 @@ import static com.example.SchoolLunchReport.global.common.Constants.ANALYTICS_TE
 
 import com.example.SchoolLunchReport.global.response.ApiResponse;
 import com.example.SchoolLunchReport.global.response.type.SuccessType;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.response.CombinedRankMenuResponseDto;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.response.RankMenuResponseDto;
-import com.example.SchoolLunchReport.statistics.controller.dto.response.response.TrackingResponseDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedRankMenuResponseDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.DesiredFoodResponseDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.response.TrackingResponseDto;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
-import com.example.SchoolLunchReport.statistics.service.StatisticsService;
+import com.example.SchoolLunchReport.statistics.service.StatisticsFacade;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class StatisticsController implements StatisticsControllerDocs {
 
-    final StatisticsService statisticsService;
+    final StatisticsFacade statisticsFacade;
 
     @Override
     @GetMapping("/rank")
@@ -35,7 +36,7 @@ public class StatisticsController implements StatisticsControllerDocs {
             date = LocalDate.now();
         }
 
-        CombinedRankMenuResponseDto combinedRankMenuResponseDto = statisticsService.getRankMenu(
+        CombinedRankMenuResponseDto combinedRankMenuResponseDto = statisticsFacade.getRankMenu(
             periodType, date);
         return ApiResponse.success(SuccessType.SUCCESS, combinedRankMenuResponseDto);
     }
@@ -48,7 +49,7 @@ public class StatisticsController implements StatisticsControllerDocs {
             date = LocalDate.now();
         }
 
-        return ApiResponse.success(SuccessType.SUCCESS, statisticsService.getStatistics(date));
+        return ApiResponse.success(SuccessType.SUCCESS, statisticsFacade.getStatistics(date));
     }
 
     @Override
@@ -57,7 +58,7 @@ public class StatisticsController implements StatisticsControllerDocs {
         PeriodType periodType
     ) {
 
-        return ApiResponse.success(SuccessType.SUCCESS, statisticsService.getTrendingMenu(
+        return ApiResponse.success(SuccessType.SUCCESS, statisticsFacade.getTrendingMenu(
             periodType));
     }
 
@@ -66,7 +67,16 @@ public class StatisticsController implements StatisticsControllerDocs {
     public ApiResponse<TrackingResponseDto> getTrackingEvaluation(
         LocalDate localDate
     ) {
-        return ApiResponse.success(SuccessType.SUCCESS, statisticsService.getTrackingEvaluation(
+        return ApiResponse.success(SuccessType.SUCCESS, statisticsFacade.getTrackingEvaluation(
             localDate));
+    }
+
+    @GetMapping("/desired-food")
+    public ApiResponse<List<DesiredFoodResponseDto>> getDesiredFood(
+        @RequestParam(name = "startDate") LocalDate startDate,
+        @RequestParam(name = "endDate") LocalDate endDate
+    ){
+        List<DesiredFoodResponseDto> desiredFoodResponseDto = statisticsFacade.getDesiredFood(startDate,endDate);
+        return ApiResponse.success(SuccessType.SUCCESS,desiredFoodResponseDto);
     }
 }
