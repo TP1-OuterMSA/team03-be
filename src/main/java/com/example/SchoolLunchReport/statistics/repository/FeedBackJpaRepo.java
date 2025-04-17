@@ -9,9 +9,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FeedBackJpaRepo extends JpaRepository<FeedBack, Long> {
+
     List<FeedBack> findByCreatedAtBetween(LocalDate createdAt, LocalDate createdAt2);
+
     boolean existsByFoodMenuId(Long foodMenuId);
+
     List<FeedBack> findByCreatedAt(LocalDate startDate);
-    // 특정 FoodMenu의 모든 피드백 조회
-    List<FeedBack> findByFoodMenu(FoodMenu foodMenu);
 }
