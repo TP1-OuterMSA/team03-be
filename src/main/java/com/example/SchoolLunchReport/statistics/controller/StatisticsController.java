@@ -1,7 +1,5 @@
 package com.example.SchoolLunchReport.statistics.controller;
-
 import static com.example.SchoolLunchReport.global.common.Constants.ANALYTICS_TEAM_URL;
-
 import com.example.SchoolLunchReport.global.response.ApiResponse;
 import com.example.SchoolLunchReport.global.response.type.SuccessType;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedRankMenuResponseDto;
