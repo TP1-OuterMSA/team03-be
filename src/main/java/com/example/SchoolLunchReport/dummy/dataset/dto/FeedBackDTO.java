@@ -9,4 +9,5 @@ public class FeedBackDTO {
 
     private Long foodMenuId;
     private Double score;
+    private String evaluation;
 }

@@ -1,8 +1,7 @@
 package com.example.SchoolLunchReport.dummy.dataset.controller;
-
 import static com.example.SchoolLunchReport.global.common.Constants.ANALYTICS_TEAM_URL;
 import com.example.SchoolLunchReport.dummy.dataset.dto.FeedBackDTO;
-import com.example.SchoolLunchReport.dummy.dataset.dto.MenuWithFoodsDTO;
+import com.example.SchoolLunchReport.dummy.dataset.dto.MenuWithFoodsAndEvaluationDTO;
 import com.example.SchoolLunchReport.dummy.dataset.service.DatasetService;
 import com.example.SchoolLunchReport.global.response.ApiResponse;
 import com.example.SchoolLunchReport.global.response.type.SuccessType;
@@ -24,15 +23,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(ANALYTICS_TEAM_URL + "/dataset")
 public class DatasetController implements DataControllerDocs {
-
     private final DatasetService datasetService;
     private final StatisticsFacade statisticsFacade;
-
     @PostMapping("/createfood")
     public ResponseEntity<Map<String, Object>> createFoodData(@RequestBody List<Food> foods) {
         int count = datasetService.createFoodData(foods);
@@ -41,17 +37,15 @@ public class DatasetController implements DataControllerDocs {
         response.put("count", count);
         return ResponseEntity.ok(response);
     }
-
     @PostMapping("/createmenu")
-    public ResponseEntity<Map<String, Object>> createMenuWithFoods(
-        @RequestBody List<MenuWithFoodsDTO> menuWithFoodsList) {
-        int count = datasetService.createMenuWithFoods(menuWithFoodsList);
+    public ResponseEntity<Map<String, Object>> createMenuWithFoodsAndEvaluation(
+            @RequestBody List<MenuWithFoodsAndEvaluationDTO> menuWithFoodsAndEvaluationList) {
+        int count = datasetService.createMenuWithFoodsAndEvaluation(menuWithFoodsAndEvaluationList);
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "메뉴 및 푸드메뉴 데이터가 성공적으로 생성되었습니다..");
+        response.put("message", "메뉴, 푸드메뉴 및 평가 데이터가 성공적으로 생성되었습니다.");
         response.put("count", count);
         return ResponseEntity.ok(response);
     }
-
     @PostMapping("/createfeedback")
     public ResponseEntity<Map<String, Object>> createFeedback(
         @RequestBody List<FeedBackDTO> feedbacks) {
@@ -61,7 +55,6 @@ public class DatasetController implements DataControllerDocs {
         response.put("count", count);
         return ResponseEntity.ok(response);
     }
-
     @PostMapping("/createfeedback/random")
     public ResponseEntity<Map<String, Object>> createRandomFeedback(LocalDate registerDate) {
         int count = datasetService.createRandomFeedback(registerDate);
@@ -70,13 +63,11 @@ public class DatasetController implements DataControllerDocs {
         response.put("count", count);
         return ResponseEntity.ok(response);
     }
-
     @GetMapping("/allmenu")
     public ResponseEntity<List<Menu>> getAllMenus() {
         List<Menu> menus = datasetService.getAllMenus();
         return ResponseEntity.ok(menus);
     }
-
     @Override
     @PostMapping("/rank")
     public ApiResponse<?> createRank(
@@ -86,7 +77,6 @@ public class DatasetController implements DataControllerDocs {
         statisticsFacade.calculateAndSaveRank(periodType, registerDate);
         return ApiResponse.success(SuccessType.SUCCESS);
     }
-
     @Override
     @GetMapping("/rank")
     public ApiResponse<?> getRankList(LocalDate registerDate, PeriodType periodType) {
@@ -99,8 +89,6 @@ public class DatasetController implements DataControllerDocs {
         List<DesiredFood> desiredFoods = datasetService.createDesiredFoods();
         return ApiResponse.success(SuccessType.SUCCESS,desiredFoods);
     }
-
-
     @GetMapping("/test")
     public ResponseEntity<Map<String, String>> testEndpoint() {
         Map<String, String> response = new HashMap<>();

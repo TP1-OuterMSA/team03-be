@@ -27,6 +27,8 @@ public class QFeedBack extends EntityPathBase<FeedBack> {
     //inherited
     public final DatePath<java.time.LocalDate> createdAt = _super.createdAt;
 
+    public final StringPath evaluation = createString("evaluation");
+
     public final com.example.SchoolLunchReport.product.FoodMenu.domain.entity.QFoodMenu foodMenu;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
