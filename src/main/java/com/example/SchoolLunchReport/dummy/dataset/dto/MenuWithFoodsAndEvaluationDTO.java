@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class MenuWithFoodsDTO {
+public class MenuWithFoodsAndEvaluationDTO {
     private LocalDate date;
     private MealType mealType;
     private String evaluation;

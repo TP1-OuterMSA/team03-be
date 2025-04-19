@@ -1,11 +1,12 @@
 package com.example.SchoolLunchReport.dummy.dataset.service;
-
 import com.example.SchoolLunchReport.client.LLMClient;
 import com.example.SchoolLunchReport.client.dto.request.AdjustMenuNameRequestDto;
 import com.example.SchoolLunchReport.dummy.dataset.dto.FeedBackDTO;
-import com.example.SchoolLunchReport.dummy.dataset.dto.MenuWithFoodsDTO;
+import com.example.SchoolLunchReport.dummy.dataset.dto.MenuWithFoodsAndEvaluationDTO;
 import com.example.SchoolLunchReport.product.FoodMenu.domain.entity.FoodMenu;
 import com.example.SchoolLunchReport.product.FoodMenu.repository.FoodMenuJpaRepository;
+import com.example.SchoolLunchReport.product.evaluation.entity.Evaluation;
+import com.example.SchoolLunchReport.product.evaluation.repository.EvaluationJpaRepository;
 import com.example.SchoolLunchReport.statistics.domain.desired.entity.DesiredFood;
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.product.food.domain.type.Category;
@@ -25,20 +26,17 @@ import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 @Service
 @RequiredArgsConstructor
 public class DatasetService {
-
     private final FoodJpaRepository foodJpaRepository;
     private final FoodMenuJpaRepository foodMenuJpaRepository;
     private final MenuJpaRepository menuJpaRepository;
     private final FeedBackJpaRepo feedBackJpaRepo;
     private final LLMClient llmClient;
     private final DesiredFoodJpaRepo desiredFoodJpaRepo;
+    private final EvaluationJpaRepository evaluationJpaRepository;
     private final RankImpl rankImpl;
-
-
     @Transactional
     public int createFoodData(List<Food> foods) {
         List<Food> savedFoods = foodJpaRepository.saveAll(foods);
@@ -46,9 +44,10 @@ public class DatasetService {
     }
 
     @Transactional
-    public int createMenuWithFoods(List<MenuWithFoodsDTO> menuWithFoodsList) {
+    public int createMenuWithFoodsAndEvaluation(List<MenuWithFoodsAndEvaluationDTO> menuWithFoodsAndEvaluationList) {
         List<Menu> menus = new ArrayList<>();
         List<FoodMenu> foodMenus = new ArrayList<>();
+        List<Evaluation> evaluations = new ArrayList<>();
         Map<Category, List<Food>> foodsByCategory = new HashMap<>();
         for (Category category : Category.values()) {
             foodsByCategory.put(category, foodJpaRepository.findByCategory(category));
@@ -56,20 +55,24 @@ public class DatasetService {
         for (Category category : Category.values()) {
             if (foodsByCategory.get(category).isEmpty()) {
                 throw new IllegalStateException(
-                    category + " 카테고리에 음식이 없습니다. 모든 카테고리에 최소 한 개 이상의 음식을 생성해주세요.");
+                        category + " 카테고리에 음식이 없습니다. 모든 카테고리에 최소 한 개 이상의 음식을 생성해주세요.");
             }
         }
-        for (MenuWithFoodsDTO dto : menuWithFoodsList) {
+        for (MenuWithFoodsAndEvaluationDTO dto : menuWithFoodsAndEvaluationList) {
             Menu menu = new Menu();
             setField(menu, "date", dto.getDate());
             setField(menu, "mealType", dto.getMealType());
-            setField(menu, "evaluation", dto.getEvaluation());
-
             Menu savedMenu = menuJpaRepository.save(menu);
+            if (dto.getEvaluation() != null && !dto.getEvaluation().trim().isEmpty()) {
+                Evaluation evaluation = new Evaluation();
+                evaluation.setMenu(savedMenu);
+                evaluation.setEvaluation(dto.getEvaluation());
+                evaluations.add(evaluation);
+            }
             for (Category category : Category.values()) {
                 List<Food> foodsInCategory = foodsByCategory.get(category);
                 Food selectedFood = foodsInCategory.get(
-                    new Random().nextInt(foodsInCategory.size()));
+                        new Random().nextInt(foodsInCategory.size()));
                 FoodMenu foodMenu = new FoodMenu();
                 foodMenu.setMenu(savedMenu);
                 foodMenu.setFood(selectedFood);
@@ -77,7 +80,8 @@ public class DatasetService {
             }
         }
         foodMenuJpaRepository.saveAll(foodMenus);
-        return menuWithFoodsList.size();
+        if (!evaluations.isEmpty()) evaluationJpaRepository.saveAll(evaluations);
+        return menuWithFoodsAndEvaluationList.size();
     }
 
     private void setField(Object object, String fieldName, Object value) {
@@ -106,6 +110,7 @@ public class DatasetService {
             FeedBack feedBack = FeedBack.builder()
                 .score(dto.getScore())
                 .foodMenu(foodMenu)
+                .evaluation(dto.getEvaluation())
                 .build();
             setField(feedBack, "foodMenu", foodMenu);
             feedBackList.add(feedBack);
