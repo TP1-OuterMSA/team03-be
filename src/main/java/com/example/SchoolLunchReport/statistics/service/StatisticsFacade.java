@@ -12,7 +12,7 @@ import com.example.SchoolLunchReport.statistics.controller.dto.response.Statisti
 import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse.ScoreCount;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.TrackingResponseDto;
 import com.example.SchoolLunchReport.statistics.domain.desired.service.DesiredFoodService;
-import com.example.SchoolLunchReport.statistics.domain.feedback.entity.CategoryScoreSumDto;
+import com.example.SchoolLunchReport.statistics.domain.feedback.entity.CategoryScoreAvgDto;
 import com.example.SchoolLunchReport.statistics.domain.feedback.entity.FeedBack;
 import com.example.SchoolLunchReport.statistics.domain.rank.entity.FoodRank;
 import com.example.SchoolLunchReport.statistics.domain.rank.service.RankService;
@@ -99,7 +99,7 @@ public class StatisticsFacade {
             startDate, endDate, 3);
     }
 
-    public List<CategoryScoreSumDto> getCategoryScore(LocalDate startDate, LocalDate endDate) {
+    public List<CategoryScoreAvgDto> getCategoryScore(LocalDate startDate, LocalDate endDate) {
         return feedBackReader.getCategoryScore(startDate,
             endDate);
     }
