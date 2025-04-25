@@ -1,4 +1,4 @@
-package com.example.SchoolLunchReport.statistics.repository;
+package com.example.SchoolLunchReport.statistics.domain.rank.repo;
 
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.statistics.domain.rank.entity.FoodRank;

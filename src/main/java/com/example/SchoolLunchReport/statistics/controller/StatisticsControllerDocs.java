@@ -29,5 +29,9 @@ public interface StatisticsControllerDocs {
     );
 
     @Operation(summary = "먹고 싶은 메뉴 조회")
-    ApiResponse<List<DesiredFoodResponseDto>> getDesiredFood(LocalDate startDate, LocalDate endDate);
+    ApiResponse<List<DesiredFoodResponseDto>> getDesiredFood(LocalDate startDate,
+        LocalDate endDate);
+
+    @Operation(summary = "카테고리별 평점 조회 API")
+    ApiResponse<?> getCategoryScore(LocalDate startDate, LocalDate endDate);
 }
