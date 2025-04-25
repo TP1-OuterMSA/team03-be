@@ -21,8 +21,6 @@ public class QMenu extends EntityPathBase<Menu> {
 
     public final DatePath<java.time.LocalDate> date = createDate("date", java.time.LocalDate.class);
 
-    public final StringPath evaluation = createString("evaluation");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final EnumPath<com.example.SchoolLunchReport.product.menu.domain.type.MealType> mealType = createEnum("mealType", com.example.SchoolLunchReport.product.menu.domain.type.MealType.class);
