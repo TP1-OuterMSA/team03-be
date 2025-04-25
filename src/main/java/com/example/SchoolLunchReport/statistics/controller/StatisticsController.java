@@ -8,7 +8,7 @@ import com.example.SchoolLunchReport.statistics.controller.dto.response.Combined
 import com.example.SchoolLunchReport.statistics.controller.dto.response.DesiredFoodResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.TrackingResponseDto;
-import com.example.SchoolLunchReport.statistics.domain.feedback.entity.CategoryScoreSumDto;
+import com.example.SchoolLunchReport.statistics.domain.feedback.entity.CategoryScoreAvgDto;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.service.StatisticsFacade;
 import java.time.LocalDate;
@@ -88,7 +88,7 @@ public class StatisticsController implements StatisticsControllerDocs {
         @RequestParam(name = "startDate") LocalDate startDate,
         @RequestParam(name = "endDate") LocalDate endDate
     ) {
-        List<CategoryScoreSumDto> categoryScore = statisticsFacade.getCategoryScore(startDate,
+        List<CategoryScoreAvgDto> categoryScore = statisticsFacade.getCategoryScore(startDate,
             endDate);
         return ApiResponse.success(SuccessType.SUCCESS, categoryScore);
     }
