@@ -57,6 +57,9 @@ dependencies {
     implementation 'com.itextpdf:itextpdf:5.5.13.3'
     implementation 'com.itextpdf.tool:xmlworker:5.5.13.3'
     implementation 'com.vladsch.flexmark:flexmark-all:0.64.0'
+
+    // monitoring
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 def querydslDir = "src/main/generated"
 

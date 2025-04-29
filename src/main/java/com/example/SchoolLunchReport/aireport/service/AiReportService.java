@@ -36,6 +36,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.springframework.http.*;
+
 @Service
 @RequiredArgsConstructor
 public class AiReportService {
@@ -46,7 +48,6 @@ public class AiReportService {
     private final FoodJpaRepository foodJpaRepository;
     private final ReportRepository reportRepository;
     private final ObjectMapper objectMapper;
-
     @Qualifier("aiReportRestTemplate")
     private final RestTemplate restTemplate;
 
@@ -258,6 +259,7 @@ public class AiReportService {
                     .build();
         }
     }
+
     public byte[] generatePdfFromReport(Long reportId) {
         try {
             Report report = reportRepository.findById(reportId)

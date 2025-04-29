@@ -24,7 +24,6 @@ public class AiReportController {
         AiReportResponseDto responseDto = aiReportService.generateReport(requestDto);
         return ResponseEntity.ok(responseDto);
     }
-
     @PostMapping("/download")
     public ResponseEntity<byte[]> downloadReport(@RequestBody ReportDownloadRequestDto requestDto) {
         try {
