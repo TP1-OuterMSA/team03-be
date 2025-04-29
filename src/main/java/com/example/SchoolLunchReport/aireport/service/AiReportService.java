@@ -2,6 +2,8 @@ package com.example.SchoolLunchReport.aireport.service;
 import com.example.SchoolLunchReport.aireport.dto.AiReportDataDto;
 import com.example.SchoolLunchReport.aireport.dto.AiReportRequestDto;
 import com.example.SchoolLunchReport.aireport.dto.AiReportResponseDto;
+import com.example.SchoolLunchReport.aireport.entity.Report;
+import com.example.SchoolLunchReport.aireport.repository.ReportRepository;
 import com.example.SchoolLunchReport.product.FoodMenu.domain.entity.FoodMenu;
 import com.example.SchoolLunchReport.product.evaluation.entity.Evaluation;
 import com.example.SchoolLunchReport.product.menu.domain.entity.Menu;
@@ -12,20 +14,28 @@ import com.example.SchoolLunchReport.product.food.repository.FoodJpaRepository;
 import com.example.SchoolLunchReport.product.menu.repository.MenuJpaRepository;
 import com.example.SchoolLunchReport.statistics.repository.FeedBackJpaRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.ast.Node;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.springframework.http.*;
-
 @Service
 @RequiredArgsConstructor
 public class AiReportService {
@@ -34,7 +44,9 @@ public class AiReportService {
     private final FoodMenuJpaRepository foodMenuJpaRepository;
     private final FeedBackJpaRepo feedBackJpaRepository;
     private final FoodJpaRepository foodJpaRepository;
+    private final ReportRepository reportRepository;
     private final ObjectMapper objectMapper;
+
     @Qualifier("aiReportRestTemplate")
     private final RestTemplate restTemplate;
 
@@ -228,17 +240,179 @@ public class AiReportService {
             System.out.println("Response from Django: " + response.getBody());
 
             String message = (String) response.getBody().get("message");
-            String report = (String) response.getBody().get("report");
+            String reportText = (String) response.getBody().get("report");
+
+            Report savedReport = reportRepository.save(Report.builder()
+                    .report(reportText)
+                    .build());
 
             return AiReportResponseDto.builder()
+                    .report_id(savedReport.getId())
                     .message(message)
-                    .report(report)
+                    .report(reportText)
                     .build();
         } catch (Exception e) {
             e.printStackTrace();
             return AiReportResponseDto.builder()
                     .error("Error sending report to Django: " + e.getMessage())
                     .build();
+        }
+    }
+    public byte[] generatePdfFromReport(Long reportId) {
+        try {
+            Report report = reportRepository.findById(reportId)
+                    .orElseThrow(() -> new RuntimeException("Report not found with id: " + reportId));
+
+            String html = convertMarkdownToHtml(report.getReport());
+
+            return convertHtmlToPdf(html);
+        } catch (Exception e) {
+            System.err.println("PDF 생성 실패: " + e.getMessage());
+            e.printStackTrace();
+
+            try {
+                return generateErrorPdf("보고서 ID: " + reportId + " PDF 생성 중 오류가 발생했습니다. 원인: " + e.getMessage());
+            } catch (Exception fallbackError) {
+                throw new RuntimeException("PDF 생성에 완전히 실패했습니다.", fallbackError);
+            }
+        }
+    }
+    private String convertMarkdownToHtml(String markdown) {
+        try {
+            MutableDataSet options = new MutableDataSet();
+            try {
+                options.set(Parser.EXTENSIONS, Collections.singletonList(
+                        com.vladsch.flexmark.ext.tables.TablesExtension.create()
+                ));
+            } catch (NoClassDefFoundError e) {
+                System.out.println("Tables extension not available, continuing without it");
+            }
+
+            Parser parser = Parser.builder(options).build();
+            HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+
+            Node document = parser.parse(markdown);
+            String html = renderer.render(document);
+            html = fixHtmlForXmlCompatibility(html);
+
+            return html;
+        } catch (Exception e) {
+            System.err.println("마크다운 변환 중 오류: " + e.getMessage());
+            return "<p>" + markdown.replace("<", "&lt;").replace(">", "&gt;") + "</p>";
+        }
+    }
+    private String fixHtmlForXmlCompatibility(String html) {
+        html = html.replaceAll("<(meta|img|br|hr|input|link|col|base)([^>]*[^/])>", "<$1$2/>");
+        html = html.replaceAll("</\\s*(meta|img|br|hr|input|link|col|base)\\s*>", "");
+        html = html.replaceAll("<img(?![^>]*alt=)([^>]*)>", "<img alt=\"\" $1>");
+        return html;
+    }
+    private byte[] convertHtmlToPdf(String html) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        try {
+            String xhtml = wrapHtmlWithStyles(fixHtmlForXmlCompatibility(html));
+
+            PdfRendererBuilder builder = new PdfRendererBuilder();
+
+            URL fontUrl = getClass().getClassLoader()
+                    .getResource("fonts/GmarketSansTTFMedium.ttf");
+            if (fontUrl == null) {
+                throw new RuntimeException(
+                        "Font not found: src/main/resources/fonts/GmarketSansTTFMedium.ttf");
+            }
+            File fontFile = new File(fontUrl.toURI());
+
+            builder.useFont(fontFile, "Gmarket Sans Medium");
+            builder.withHtmlContent(xhtml, null);
+            builder.toStream(outputStream);
+            builder.run();
+
+            return outputStream.toByteArray();
+        } catch (Exception e) {
+            System.err.println("PDF 변환 중 오류: " + e.getMessage());
+            e.printStackTrace();
+
+            try {
+                String fallbackHtml = "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"/></head><body>" +
+                        "<h1>보고서</h1><p>PDF 변환 중 오류가 발생했습니다. 원본 보고서를 표시합니다:</p>" +
+                        "<pre>" + html.replace("<", "&lt;").replace(">", "&gt;") + "</pre>" +
+                        "</body></html>";
+
+                PdfRendererBuilder fallbackBuilder = new PdfRendererBuilder();
+                fallbackBuilder.withHtmlContent(fallbackHtml, null);
+                fallbackBuilder.toStream(outputStream);
+                fallbackBuilder.run();
+
+                return outputStream.toByteArray();
+            } catch (Exception fallbackError) {
+                String errorHtml = "<html><body><h1>PDF 생성 실패</h1></body></html>";
+                PdfRendererBuilder errorBuilder = new PdfRendererBuilder();
+                errorBuilder.withHtmlContent(errorHtml, null);
+                errorBuilder.toStream(outputStream);
+                errorBuilder.run();
+
+                return outputStream.toByteArray();
+            }
+        } finally {
+            outputStream.close();
+        }
+    }
+    private String wrapHtmlWithStyles(String htmlContent) {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" +
+                "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" +
+                "<head>\n" +
+                "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n" +
+                "    <style type=\"text/css\">\n" +
+                "        body { font-family: 'Gmarket Sans Medium', sans-serif; margin: 40px; line-height: 1.6; }\n" +
+                "        h1 { color: #333366; }\n" +
+                "        h2 { color: #336699; border-bottom: 1px solid #ddd; padding-bottom: 5px; }\n" +
+                "        h3 { color: #5588bb; }\n" +
+                "        table { border-collapse: collapse; width: 100%; margin: 20px 0; }\n" +
+                "        th, td { padding: 8px; text-align: left; border: 1px solid #ddd; }\n" +
+                "        th { background-color: #f2f2f2; }\n" +
+                "        blockquote { background: #f9f9f9; border-left: 10px solid #ccc; margin: 1.5em 10px; padding: 0.5em 10px; }\n" +
+                "        code { background: #f4f4f4; padding: 2px 4px; border-radius: 3px; }\n" +
+                "        pre { background: #f4f4f4; padding: 10px; border-radius: 3px; overflow-x: auto; }\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                htmlContent +
+                "</body>\n" +
+                "</html>";
+    }
+
+    // 오류 발생하면 -> 대체 PDF로 반환
+    private byte[] generateErrorPdf(String errorMessage) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        String errorHtml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" +
+                "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" +
+                "<head>\n" +
+                "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>\n" +
+                "    <style type=\"text/css\">\n" +
+                "        body { font-family: Arial, sans-serif; margin: 40px; }\n" +
+                "        .error { color: red; background: #ffeeee; padding: 20px; border: 1px solid #ffcccc; }\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "    <h1>PDF 생성 오류</h1>\n" +
+                "    <div class=\"error\">" + errorMessage.replace("<", "&lt;").replace(">", "&gt;") + "</div>\n" +
+                "    <p>관리자에게 문의하세요.</p>\n" +
+                "</body>\n" +
+                "</html>";
+
+        try {
+            PdfRendererBuilder builder = new PdfRendererBuilder();
+            builder.withHtmlContent(errorHtml, null);
+            builder.toStream(outputStream);
+            builder.run();
+
+            return outputStream.toByteArray();
+        } finally {
+            outputStream.close();
         }
     }
 }

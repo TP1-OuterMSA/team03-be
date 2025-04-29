@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AiReportResponseDto {
+    private Long report_id;
     private String message;
     private String error;
     private String report;
