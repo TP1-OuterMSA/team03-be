@@ -311,21 +311,15 @@ public class AiReportService {
     }
     private byte[] convertHtmlToPdf(String html) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        File tempFontFile = null;
 
         try {
             String xhtml = wrapHtmlWithStyles(fixHtmlForXmlCompatibility(html));
-
             PdfRendererBuilder builder = new PdfRendererBuilder();
 
-            URL fontUrl = getClass().getClassLoader()
-                    .getResource("fonts/GmarketSansTTFMedium.ttf");
-            if (fontUrl == null) {
-                throw new RuntimeException(
-                        "Font not found: src/main/resources/fonts/GmarketSansTTFMedium.ttf");
-            }
-            File fontFile = new File(fontUrl.toURI());
+            tempFontFile = createTempFontFile("fonts/GmarketSansTTFMedium.ttf");
 
-            builder.useFont(fontFile, "Gmarket Sans Medium");
+            builder.useFont(tempFontFile, "Gmarket Sans Medium");
             builder.withHtmlContent(xhtml, null);
             builder.toStream(outputStream);
             builder.run();
@@ -358,6 +352,36 @@ public class AiReportService {
             }
         } finally {
             outputStream.close();
+            if (tempFontFile != null && tempFontFile.exists()) {
+                tempFontFile.delete();
+            }
+        }
+    }
+
+    private File createTempFontFile(String fontPath) throws IOException {
+        try (java.io.InputStream is = getClass().getClassLoader().getResourceAsStream(fontPath)) {
+            if (is == null) {
+                throw new IOException("Font resource not found: " + fontPath);
+            }
+
+            String extension = "";
+            int lastDot = fontPath.lastIndexOf('.');
+            if (lastDot > 0) {
+                extension = fontPath.substring(lastDot);
+            }
+
+            File tempFile = File.createTempFile("font-", extension);
+            tempFile.deleteOnExit();
+
+            try (java.io.FileOutputStream out = new java.io.FileOutputStream(tempFile)) {
+                byte[] buffer = new byte[8192];
+                int bytesRead;
+                while ((bytesRead = is.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
+            }
+
+            return tempFile;
         }
     }
     private String wrapHtmlWithStyles(String htmlContent) {
