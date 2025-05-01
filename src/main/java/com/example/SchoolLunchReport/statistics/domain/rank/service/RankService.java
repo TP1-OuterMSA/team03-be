@@ -3,20 +3,19 @@ package com.example.SchoolLunchReport.statistics.domain.rank.service;
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse.ScoreCount;
+import com.example.SchoolLunchReport.statistics.domain.boundary.support.BoundaryMapper;
+import com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.domain.feedback.entity.FeedBack;
 import com.example.SchoolLunchReport.statistics.domain.rank.entity.FoodRank;
-import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
+import com.example.SchoolLunchReport.statistics.domain.rank.support.RankCalculator;
+import com.example.SchoolLunchReport.statistics.domain.rank.support.RankFilter;
+import com.example.SchoolLunchReport.statistics.domain.rank.support.RankImpl;
+import com.example.SchoolLunchReport.statistics.domain.rank.support.RankReader;
+import com.example.SchoolLunchReport.statistics.domain.rank.support.RankSaver;
 import com.example.SchoolLunchReport.statistics.domain.type.RankType;
-import com.example.SchoolLunchReport.statistics.support.RankCalculator;
-import com.example.SchoolLunchReport.statistics.support.RankFilter;
-import com.example.SchoolLunchReport.statistics.support.RankImpl;
-import com.example.SchoolLunchReport.statistics.support.RankReader;
-import com.example.SchoolLunchReport.statistics.support.RankSaver;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,16 +28,18 @@ public class RankService {
     final RankCalculator rankCalculator;
     final RankSaver rankSaver;
     final RankFilter rankFilter;
+    final BoundaryMapper boundaryMapper;
 
     public List<RankMenuResponseDto> getTopRankMenu(PeriodType periodType, LocalDate date) {
-        LocalDate targetDate = periodType.getStartOfThisPeriod(date);
-        List<FoodRank> top5FoodRank = rankReader.getFoodRank(periodType, targetDate, RankType.TOP);
+        LocalDate rankRegisterDate = boundaryMapper.getRankRegisterDate(periodType, date);
+        List<FoodRank> top5FoodRank = rankReader.getFoodRank(periodType, rankRegisterDate,
+            RankType.TOP);
         return rankImpl.getRankMenuResponseDtoList(top5FoodRank);
     }
 
     public List<RankMenuResponseDto> getBottomRankMenu(PeriodType periodType, LocalDate date) {
-        LocalDate targetDate = periodType.getStartOfThisPeriod(date);
-        List<FoodRank> bottom5FoodRank = rankReader.getFoodRank(periodType, targetDate,
+        LocalDate rankRegisterDate = boundaryMapper.getRankRegisterDate(periodType, date);
+        List<FoodRank> bottom5FoodRank = rankReader.getFoodRank(periodType, rankRegisterDate,
             RankType.BOTTOM);
         return rankImpl.getRankMenuResponseDtoList(
             bottom5FoodRank);
@@ -50,7 +51,7 @@ public class RankService {
 
     public List<RankMenuResponseDto> getTrendingMenu(PeriodType periodType) {
         LocalDate today = LocalDate.now();
-        LocalDate conditionDate = periodType.getStartOfThisPeriod(today);
+        LocalDate conditionDate = boundaryMapper.getRankRegisterDate(periodType, today);
         List<FoodRank> top10RankGapList = rankReader.getTop10ByRankGapDesc(periodType,
             conditionDate);
         List<FoodRank> topRankGapList = rankFilter.filterByRankGapGreaterThanOrEqualCondition(
@@ -61,49 +62,25 @@ public class RankService {
     public void calculateAndSave(
         List<FeedBack> feedBackList,
         PeriodType periodType,
-        LocalDate preDate,
         LocalDate registerDate) {
+
         Map<Food, Double> foodScoreAverageMap = rankCalculator.calculateFoodScoreAverage(
             feedBackList);
-        List<FoodRank> preRanking = rankReader.findByPeriodTypeAndStartPeriod(periodType, preDate);
 
-        Map<Food, Integer> preFoodRanking = preRanking.stream()
-            .collect(Collectors.toMap(
-                FoodRank::getFood,
-                FoodRank::getRanking
-            ));
+        List<FoodRank> foodRankList = rankImpl.generateRanks(foodScoreAverageMap, periodType,
+            registerDate);
+        List<FoodRank> preFoodRankList = rankReader.findByPeriodTypeAndRegisterDate(
+            periodType, registerDate);
+        Map<Food, Integer> preFoodRanking = rankImpl.getRankingMap(preFoodRankList);
 
-        Integer preRankingMedian = rankCalculator.getRankingMedian(preRanking);
+        Integer preRankingMedian = rankCalculator.getRankingMedian(preFoodRanking);
 
-        AtomicInteger rankCounter = new AtomicInteger(1);
+        rankCalculator.compareRank(foodRankList, preFoodRanking, preRankingMedian);
 
-        List<FoodRank> newFoodRankList = foodScoreAverageMap.entrySet().stream()
-            .map(entry -> {
-                Food food = entry.getKey();
-                Double averageScore = entry.getValue();
-                Integer preRank = preFoodRanking.getOrDefault(food, preRankingMedian);
-                return buildRankForFood(food, averageScore,
-                    rankCounter.getAndIncrement(), registerDate, preRank, periodType);
-            })
-            .collect(Collectors.toList());
-
-        rankSaver.saveAll(newFoodRankList);
-    }
-
-    private FoodRank buildRankForFood(Food food, Double score, int currentRank, LocalDate thisWeek,
-        Integer preRank, PeriodType periodType) {
-
-        return FoodRank.builder()
-            .food(food)
-            .startPeriod(thisWeek)
-            .score(score)
-            .previousRanking(preRank)
-            .periodType(periodType)
-            .ranking(currentRank)
-            .build();
+        rankSaver.saveAll(foodRankList);
     }
 
     public List<FoodRank> getRankList(PeriodType periodType, LocalDate registerDate) {
-        return rankReader.findByPeriodTypeAndStartPeriod(periodType, registerDate);
+        return rankReader.findByPeriodTypeAndRegisterDate(periodType, registerDate);
     }
 }
