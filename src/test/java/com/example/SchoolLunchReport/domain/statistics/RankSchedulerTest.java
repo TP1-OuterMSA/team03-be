@@ -1,6 +1,6 @@
 package com.example.SchoolLunchReport.domain.statistics;
 
-import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
+import com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.service.StatisticsFacade;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package com.example.SchoolLunchReport.statistics.domain.rank.entity;
 
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
-import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
+import com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,7 +24,7 @@ public class FoodRank {
 
     @ManyToOne
     Food food;
-    LocalDate startPeriod;
+    LocalDate registerDate;
     PeriodType periodType;
     Integer ranking;
     Double score;
@@ -33,15 +33,13 @@ public class FoodRank {
     private static final Integer NOT_CHANGE = 0;
 
     @Builder
-    public FoodRank(Food food, LocalDate startPeriod, PeriodType periodType, Integer ranking,
-        Double score,
-        Integer previousRanking) {
+    public FoodRank(Food food, LocalDate registerDate, PeriodType periodType, Integer ranking,
+        Double score) {
         this.food = food;
-        this.startPeriod = startPeriod;
+        this.registerDate = registerDate;
         this.periodType = periodType;
         this.ranking = ranking;
         this.score = score;
-        this.previousRanking = previousRanking;
     }
 
     public Integer getRankGap() {
@@ -49,5 +47,9 @@ public class FoodRank {
             return NOT_CHANGE;
         }
         return previousRanking - ranking;
+    }
+
+    public void setPreviousRanking(Integer previousRanking) {
+        this.previousRanking = previousRanking;
     }
 }

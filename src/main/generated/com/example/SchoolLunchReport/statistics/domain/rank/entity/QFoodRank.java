@@ -26,15 +26,15 @@ public class QFoodRank extends EntityPathBase<FoodRank> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final EnumPath<com.example.SchoolLunchReport.statistics.domain.type.PeriodType> periodType = createEnum("periodType", com.example.SchoolLunchReport.statistics.domain.type.PeriodType.class);
+    public final EnumPath<com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType> periodType = createEnum("periodType", com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType.class);
 
     public final NumberPath<Integer> previousRanking = createNumber("previousRanking", Integer.class);
 
     public final NumberPath<Integer> ranking = createNumber("ranking", Integer.class);
 
-    public final NumberPath<Double> score = createNumber("score", Double.class);
+    public final DatePath<java.time.LocalDate> registerDate = createDate("registerDate", java.time.LocalDate.class);
 
-    public final DatePath<java.time.LocalDate> startPeriod = createDate("startPeriod", java.time.LocalDate.class);
+    public final NumberPath<Double> score = createNumber("score", Double.class);
 
     public QFoodRank(String variable) {
         this(FoodRank.class, forVariable(variable), INITS);

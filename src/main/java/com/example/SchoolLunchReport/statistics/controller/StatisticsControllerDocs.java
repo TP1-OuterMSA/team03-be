@@ -1,9 +1,10 @@
 package com.example.SchoolLunchReport.statistics.controller;
 
 import com.example.SchoolLunchReport.global.response.ApiResponse;
+import com.example.SchoolLunchReport.statistics.controller.dto.request.DesiredFoodRequestDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.DesiredFoodResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.TrackingResponseDto;
-import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
+import com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
@@ -29,8 +30,8 @@ public interface StatisticsControllerDocs {
     );
 
     @Operation(summary = "먹고 싶은 메뉴 조회")
-    ApiResponse<List<DesiredFoodResponseDto>> getDesiredFood(LocalDate startDate,
-        LocalDate endDate);
+    ApiResponse<List<DesiredFoodResponseDto>> getDesiredFood(
+        DesiredFoodRequestDto desiredFoodRequestDto);
 
     @Operation(summary = "카테고리별 평점 조회 API")
     ApiResponse<?> getCategoryScore(LocalDate startDate, LocalDate endDate);
