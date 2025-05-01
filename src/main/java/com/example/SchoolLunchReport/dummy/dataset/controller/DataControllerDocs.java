@@ -1,10 +1,11 @@
 package com.example.SchoolLunchReport.dummy.dataset.controller;
+
 import com.example.SchoolLunchReport.dummy.dataset.dto.FeedBackDTO;
 import com.example.SchoolLunchReport.dummy.dataset.dto.MenuWithFoodsAndEvaluationDTO;
 import com.example.SchoolLunchReport.global.response.ApiResponse;
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.product.menu.domain.entity.Menu;
-import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
+import com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+
 @Tag(name = "데이터 초기화 관련 API")
 public interface DataControllerDocs {
 

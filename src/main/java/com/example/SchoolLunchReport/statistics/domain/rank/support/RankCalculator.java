@@ -1,4 +1,4 @@
-package com.example.SchoolLunchReport.statistics.support;
+package com.example.SchoolLunchReport.statistics.domain.rank.support;
 
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse.ScoreCount;
@@ -62,10 +62,9 @@ public class RankCalculator {
 
 
     public Integer getRankingMedian(
-        List<FoodRank> preRanking
+        Map<Food, Integer> preRanking
     ) {
-        List<Integer> rankings = preRanking.stream()
-            .map(FoodRank::getRanking)
+        List<Integer> rankings = preRanking.values().stream()
             .sorted()
             .toList();
         return calculateMedian(rankings);
@@ -92,5 +91,13 @@ public class RankCalculator {
             .orElse(0.0);
 
         return Math.round(average * 100) / 100.0;
+    }
+
+    public void compareRank(List<FoodRank> foodRankList, Map<Food, Integer> preRankList,
+        Integer preRankingMedian) {
+        for (FoodRank foodRank : foodRankList) {
+            foodRank.setPreviousRanking(
+                preRankList.getOrDefault(foodRank.getFood(), preRankingMedian));
+        }
     }
 }

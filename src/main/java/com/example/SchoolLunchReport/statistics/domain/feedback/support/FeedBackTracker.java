@@ -1,10 +1,12 @@
-package com.example.SchoolLunchReport.statistics.support;
+package com.example.SchoolLunchReport.statistics.domain.feedback.support;
 
-import static com.example.SchoolLunchReport.statistics.domain.type.PeriodType.MONTHLY;
-import static com.example.SchoolLunchReport.statistics.domain.type.PeriodType.WEEKLY;
+import static com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType.MONTHLY;
+import static com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType.WEEKLY;
 
 import com.example.SchoolLunchReport.statistics.controller.dto.response.TrackingResponseDto;
+import com.example.SchoolLunchReport.statistics.domain.boundary.support.BoundaryMapper;
 import com.example.SchoolLunchReport.statistics.domain.feedback.entity.FeedBack;
+import com.example.SchoolLunchReport.statistics.domain.rank.support.RankCalculator;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -21,7 +23,7 @@ public class FeedBackTracker {
 
     private final FeedBackReader feedBackReader;
     private final RankCalculator rankCalculator;
-
+    private final BoundaryMapper boundaryMapper;
     private static final int WEEK_DAYS_COUNT = 5;
     private static final int MONTH_COUNT = 5;
 
@@ -36,14 +38,14 @@ public class FeedBackTracker {
     }
 
     private List<Double> calculateWeeklyScores(LocalDate date) {
-        LocalDate startOfPreviousPeriod = WEEKLY.getStartOfPreviousPeriod(date);
+        LocalDate startOfPreviousPeriod = boundaryMapper.getStartOfPreviousPeriod(WEEKLY, date);
         LocalDate monday = startOfPreviousPeriod.with(
             TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
         return getScoresForPeriod(monday, WEEK_DAYS_COUNT, ChronoUnit.DAYS);
     }
 
     private List<Double> calculateMonthlyScores(LocalDate date) {
-        LocalDate thisMonth = MONTHLY.getStartOfThisPeriod(date);
+        LocalDate thisMonth = boundaryMapper.getRankRegisterDate(MONTHLY, date);
         LocalDate startMonth = thisMonth.minusMonths(MONTH_COUNT);
         return getScoresForPeriod(startMonth, MONTH_COUNT, ChronoUnit.MONTHS);
     }
