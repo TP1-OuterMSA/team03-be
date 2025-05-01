@@ -4,18 +4,21 @@ import static com.example.SchoolLunchReport.global.common.Constants.ANALYTICS_TE
 
 import com.example.SchoolLunchReport.global.response.ApiResponse;
 import com.example.SchoolLunchReport.global.response.type.SuccessType;
+import com.example.SchoolLunchReport.statistics.controller.dto.request.DesiredFoodRequestDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedRankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.DesiredFoodResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.TrackingResponseDto;
+import com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.domain.feedback.entity.CategoryScoreAvgDto;
-import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.service.StatisticsFacade;
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,13 +75,12 @@ public class StatisticsController implements StatisticsControllerDocs {
             localDate));
     }
 
-    @GetMapping("/desired-food")
+    @GetMapping("/desired-food/{periodType}")
     public ApiResponse<List<DesiredFoodResponseDto>> getDesiredFood(
-        @RequestParam(name = "startDate") LocalDate startDate,
-        @RequestParam(name = "endDate") LocalDate endDate
+        @Valid @ModelAttribute DesiredFoodRequestDto desiredFoodRequestDto
     ) {
         List<DesiredFoodResponseDto> desiredFoodResponseDto = statisticsFacade.getDesiredFood(
-            startDate, endDate);
+            desiredFoodRequestDto);
         return ApiResponse.success(SuccessType.SUCCESS, desiredFoodResponseDto);
     }
 
