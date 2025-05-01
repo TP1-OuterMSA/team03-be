@@ -3,9 +3,10 @@ package com.example.SchoolLunchReport.statistics.support;
 import static com.example.SchoolLunchReport.statistics.domain.type.PeriodType.MONTHLY;
 import static com.example.SchoolLunchReport.statistics.domain.type.PeriodType.WEEKLY;
 
+import com.example.SchoolLunchReport.statistics.domain.feedback.entity.CategoryScoreAvgDto;
 import com.example.SchoolLunchReport.statistics.domain.feedback.entity.FeedBack;
+import com.example.SchoolLunchReport.statistics.domain.feedback.repo.FeedBackJpaRepo;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
-import com.example.SchoolLunchReport.statistics.repository.FeedBackJpaRepo;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +42,11 @@ public class FeedBackReader {
         }
 
         return getFeedBackInBoundary(startDate, endDate);
+    }
+
+    public List<CategoryScoreAvgDto> getCategoryScore(LocalDate startDate, LocalDate endDate) {
+        List<CategoryScoreAvgDto> categoryScoreAvgDtos = feedBackJpaRepo.sumScoreByCategoryBetween(
+            startDate, endDate);
+        return feedBackJpaRepo.sumScoreByCategoryBetween(startDate, endDate);
     }
 }

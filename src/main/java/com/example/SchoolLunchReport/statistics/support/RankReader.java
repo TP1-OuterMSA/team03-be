@@ -3,9 +3,9 @@ package com.example.SchoolLunchReport.statistics.support;
 import static com.example.SchoolLunchReport.statistics.domain.type.RankType.TOP;
 
 import com.example.SchoolLunchReport.statistics.domain.rank.entity.FoodRank;
+import com.example.SchoolLunchReport.statistics.domain.rank.repo.RankJpaRepo;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.domain.type.RankType;
-import com.example.SchoolLunchReport.statistics.repository.RankJpaRepo;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class RankReader {
                 );
         }
     }
-    
+
     public List<FoodRank> getTop10ByRankGapDesc(PeriodType periodType, LocalDate startPeriod) {
         return rankJpaRepo.findTop5ByRankGapDesc(
             periodType,

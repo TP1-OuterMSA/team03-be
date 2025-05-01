@@ -3,6 +3,7 @@ package com.example.SchoolLunchReport.statistics.service;
 import static com.example.SchoolLunchReport.statistics.domain.type.PeriodType.MONTHLY;
 import static com.example.SchoolLunchReport.statistics.domain.type.PeriodType.WEEKLY;
 
+import com.example.SchoolLunchReport.product.menu.service.MenuService;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedRankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedStatisticsResponse;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.DesiredFoodResponseDto;
@@ -11,6 +12,7 @@ import com.example.SchoolLunchReport.statistics.controller.dto.response.Statisti
 import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse.ScoreCount;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.TrackingResponseDto;
 import com.example.SchoolLunchReport.statistics.domain.desired.service.DesiredFoodService;
+import com.example.SchoolLunchReport.statistics.domain.feedback.entity.CategoryScoreAvgDto;
 import com.example.SchoolLunchReport.statistics.domain.feedback.entity.FeedBack;
 import com.example.SchoolLunchReport.statistics.domain.rank.entity.FoodRank;
 import com.example.SchoolLunchReport.statistics.domain.rank.service.RankService;
@@ -28,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class StatisticsFacade {
 
+    final MenuService menuService;
     final FeedBackReader feedBackReader;
     final FeedBackTracker feedBackTracker;
     final DesiredFoodService desiredFoodService;
@@ -94,5 +97,10 @@ public class StatisticsFacade {
     ) {
         return desiredFoodService.getDesiredFoodTopN(
             startDate, endDate, 3);
+    }
+
+    public List<CategoryScoreAvgDto> getCategoryScore(LocalDate startDate, LocalDate endDate) {
+        return feedBackReader.getCategoryScore(startDate,
+            endDate);
     }
 }

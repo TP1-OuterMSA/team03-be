@@ -1,11 +1,14 @@
 package com.example.SchoolLunchReport.statistics.controller;
+
 import static com.example.SchoolLunchReport.global.common.Constants.ANALYTICS_TEAM_URL;
+
 import com.example.SchoolLunchReport.global.response.ApiResponse;
 import com.example.SchoolLunchReport.global.response.type.SuccessType;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedRankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.DesiredFoodResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.TrackingResponseDto;
+import com.example.SchoolLunchReport.statistics.domain.feedback.entity.CategoryScoreAvgDto;
 import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.service.StatisticsFacade;
 import java.time.LocalDate;
@@ -73,8 +76,21 @@ public class StatisticsController implements StatisticsControllerDocs {
     public ApiResponse<List<DesiredFoodResponseDto>> getDesiredFood(
         @RequestParam(name = "startDate") LocalDate startDate,
         @RequestParam(name = "endDate") LocalDate endDate
-    ){
-        List<DesiredFoodResponseDto> desiredFoodResponseDto = statisticsFacade.getDesiredFood(startDate,endDate);
-        return ApiResponse.success(SuccessType.SUCCESS,desiredFoodResponseDto);
+    ) {
+        List<DesiredFoodResponseDto> desiredFoodResponseDto = statisticsFacade.getDesiredFood(
+            startDate, endDate);
+        return ApiResponse.success(SuccessType.SUCCESS, desiredFoodResponseDto);
     }
+
+    @Override
+    @GetMapping("/category")
+    public ApiResponse<?> getCategoryScore(
+        @RequestParam(name = "startDate") LocalDate startDate,
+        @RequestParam(name = "endDate") LocalDate endDate
+    ) {
+        List<CategoryScoreAvgDto> categoryScore = statisticsFacade.getCategoryScore(startDate,
+            endDate);
+        return ApiResponse.success(SuccessType.SUCCESS, categoryScore);
+    }
+
 }

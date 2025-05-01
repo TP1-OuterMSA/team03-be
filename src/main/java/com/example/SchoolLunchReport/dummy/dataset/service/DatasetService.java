@@ -1,4 +1,5 @@
 package com.example.SchoolLunchReport.dummy.dataset.service;
+
 import com.example.SchoolLunchReport.client.LLMClient;
 import com.example.SchoolLunchReport.client.dto.request.AdjustMenuNameRequestDto;
 import com.example.SchoolLunchReport.dummy.dataset.dto.FeedBackDTO;
@@ -7,15 +8,15 @@ import com.example.SchoolLunchReport.product.FoodMenu.domain.entity.FoodMenu;
 import com.example.SchoolLunchReport.product.FoodMenu.repository.FoodMenuJpaRepository;
 import com.example.SchoolLunchReport.product.evaluation.entity.Evaluation;
 import com.example.SchoolLunchReport.product.evaluation.repository.EvaluationJpaRepository;
-import com.example.SchoolLunchReport.statistics.domain.desired.entity.DesiredFood;
 import com.example.SchoolLunchReport.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.product.food.domain.type.Category;
-import com.example.SchoolLunchReport.statistics.domain.desired.repo.DesiredFoodJpaRepo;
 import com.example.SchoolLunchReport.product.food.repository.FoodJpaRepository;
 import com.example.SchoolLunchReport.product.menu.domain.entity.Menu;
 import com.example.SchoolLunchReport.product.menu.repository.MenuJpaRepository;
+import com.example.SchoolLunchReport.statistics.domain.desired.entity.DesiredFood;
+import com.example.SchoolLunchReport.statistics.domain.desired.repo.DesiredFoodJpaRepo;
 import com.example.SchoolLunchReport.statistics.domain.feedback.entity.FeedBack;
-import com.example.SchoolLunchReport.statistics.repository.FeedBackJpaRepo;
+import com.example.SchoolLunchReport.statistics.domain.feedback.repo.FeedBackJpaRepo;
 import com.example.SchoolLunchReport.statistics.support.RankImpl;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,9 +27,11 @@ import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 @Service
 @RequiredArgsConstructor
 public class DatasetService {
+
     private final FoodJpaRepository foodJpaRepository;
     private final FoodMenuJpaRepository foodMenuJpaRepository;
     private final MenuJpaRepository menuJpaRepository;
@@ -37,6 +40,7 @@ public class DatasetService {
     private final DesiredFoodJpaRepo desiredFoodJpaRepo;
     private final EvaluationJpaRepository evaluationJpaRepository;
     private final RankImpl rankImpl;
+
     @Transactional
     public int createFoodData(List<Food> foods) {
         List<Food> savedFoods = foodJpaRepository.saveAll(foods);
@@ -44,7 +48,8 @@ public class DatasetService {
     }
 
     @Transactional
-    public int createMenuWithFoodsAndEvaluation(List<MenuWithFoodsAndEvaluationDTO> menuWithFoodsAndEvaluationList) {
+    public int createMenuWithFoodsAndEvaluation(
+        List<MenuWithFoodsAndEvaluationDTO> menuWithFoodsAndEvaluationList) {
         List<Menu> menus = new ArrayList<>();
         List<FoodMenu> foodMenus = new ArrayList<>();
         List<Evaluation> evaluations = new ArrayList<>();
@@ -55,7 +60,7 @@ public class DatasetService {
         for (Category category : Category.values()) {
             if (foodsByCategory.get(category).isEmpty()) {
                 throw new IllegalStateException(
-                        category + " 카테고리에 음식이 없습니다. 모든 카테고리에 최소 한 개 이상의 음식을 생성해주세요.");
+                    category + " 카테고리에 음식이 없습니다. 모든 카테고리에 최소 한 개 이상의 음식을 생성해주세요.");
             }
         }
         for (MenuWithFoodsAndEvaluationDTO dto : menuWithFoodsAndEvaluationList) {
@@ -72,7 +77,7 @@ public class DatasetService {
             for (Category category : Category.values()) {
                 List<Food> foodsInCategory = foodsByCategory.get(category);
                 Food selectedFood = foodsInCategory.get(
-                        new Random().nextInt(foodsInCategory.size()));
+                    new Random().nextInt(foodsInCategory.size()));
                 FoodMenu foodMenu = new FoodMenu();
                 foodMenu.setMenu(savedMenu);
                 foodMenu.setFood(selectedFood);
@@ -80,7 +85,9 @@ public class DatasetService {
             }
         }
         foodMenuJpaRepository.saveAll(foodMenus);
-        if (!evaluations.isEmpty()) evaluationJpaRepository.saveAll(evaluations);
+        if (!evaluations.isEmpty()) {
+            evaluationJpaRepository.saveAll(evaluations);
+        }
         return menuWithFoodsAndEvaluationList.size();
     }
 
