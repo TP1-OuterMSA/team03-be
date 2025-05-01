@@ -39,10 +39,6 @@ public class WeeklyBoundaryCalculator implements BoundaryCalculator {
 
     @Override
     public Boundary getBoundary(DesiredFoodRequestDto desiredFoodRequestDto) {
-        Integer year = desiredFoodRequestDto.year();
-        int month = desiredFoodRequestDto.month().getValue();
-        LocalDate startDate = LocalDate.of(year, month, 1);
-        LocalDate endDate = LocalDate.of(year, month, startDate.lengthOfMonth());
-        return new Boundary(startDate, endDate);
+        return null;
     }
 }
