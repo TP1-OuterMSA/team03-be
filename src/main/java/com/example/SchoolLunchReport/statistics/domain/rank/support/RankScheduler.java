@@ -1,6 +1,6 @@
-package com.example.SchoolLunchReport.statistics.support;
+package com.example.SchoolLunchReport.statistics.domain.rank.support;
 
-import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
+import com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.service.StatisticsFacade;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -15,26 +15,23 @@ public class RankScheduler {
 
     private final StatisticsFacade statisticsFacade;
 
-
     @Transactional
     @Scheduled(cron = "0 0 23 ? * SUN", zone = "Asia/Seoul")
     public void calculateAndSaveWeeklyFoodRank() {
 
-        LocalDate thisWeek = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        LocalDate thisSunDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
         PeriodType periodType = PeriodType.WEEKLY;
-        statisticsFacade.calculateAndSaveRank(periodType, thisWeek);
+
+        statisticsFacade.calculateAndSaveRank(periodType, thisSunDate);
 
     }
 
     @Transactional
     @Scheduled(cron = "0 0 0 1 * ?", zone = "Asia/Seoul")
     public void calculateAndSaveMonthlyFoodRank() {
-
         LocalDate thisMonth = LocalDate.now(ZoneId.of("Asia/Seoul"));
         PeriodType periodType = PeriodType.MONTHLY;
-        LocalDate preMonth = periodType.getStartOfPreviousPeriod(thisMonth);
         statisticsFacade.calculateAndSaveRank(periodType, thisMonth);
-
     }
 
 }

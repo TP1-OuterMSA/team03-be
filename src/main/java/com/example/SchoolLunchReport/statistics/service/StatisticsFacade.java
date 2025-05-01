@@ -1,9 +1,11 @@
 package com.example.SchoolLunchReport.statistics.service;
 
-import static com.example.SchoolLunchReport.statistics.domain.type.PeriodType.MONTHLY;
-import static com.example.SchoolLunchReport.statistics.domain.type.PeriodType.WEEKLY;
+import static com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType.MONTHLY;
+import static com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType.WEEKLY;
 
+import com.example.SchoolLunchReport.product.menu.domain.entity.Menu;
 import com.example.SchoolLunchReport.product.menu.service.MenuService;
+import com.example.SchoolLunchReport.statistics.controller.dto.request.DesiredFoodRequestDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedRankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedStatisticsResponse;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.DesiredFoodResponseDto;
@@ -11,14 +13,15 @@ import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenu
 import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.StatisticsResponse.ScoreCount;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.TrackingResponseDto;
+import com.example.SchoolLunchReport.statistics.domain.boundary.entity.Boundary;
+import com.example.SchoolLunchReport.statistics.domain.boundary.support.BoundaryMapper;
+import com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.domain.desired.service.DesiredFoodService;
 import com.example.SchoolLunchReport.statistics.domain.feedback.entity.CategoryScoreAvgDto;
 import com.example.SchoolLunchReport.statistics.domain.feedback.entity.FeedBack;
+import com.example.SchoolLunchReport.statistics.domain.feedback.service.FeedBackService;
 import com.example.SchoolLunchReport.statistics.domain.rank.entity.FoodRank;
 import com.example.SchoolLunchReport.statistics.domain.rank.service.RankService;
-import com.example.SchoolLunchReport.statistics.domain.type.PeriodType;
-import com.example.SchoolLunchReport.statistics.support.FeedBackReader;
-import com.example.SchoolLunchReport.statistics.support.FeedBackTracker;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +34,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class StatisticsFacade {
 
     final MenuService menuService;
-    final FeedBackReader feedBackReader;
-    final FeedBackTracker feedBackTracker;
+    final FeedBackService feedBackService;
     final DesiredFoodService desiredFoodService;
     final RankService rankService;
+    final BoundaryMapper boundaryMapper;
+
 
     @Transactional(readOnly = true)
     public CombinedRankMenuResponseDto getRankMenu(PeriodType periodType, LocalDate date) {
@@ -49,9 +53,11 @@ public class StatisticsFacade {
 
     @Transactional(readOnly = true)
     public CombinedStatisticsResponse getStatistics(LocalDate date) {
+        Boundary weeklyBoundary = boundaryMapper.mapBoundary(WEEKLY, date);
+        Boundary monthlyBoundary = boundaryMapper.mapBoundary(MONTHLY, date);
 
-        List<FeedBack> feedBackListWeekly = feedBackReader.getFeedBackInBoundary(date, WEEKLY);
-        List<FeedBack> feedBackListMonthly = feedBackReader.getFeedBackInBoundary(date, MONTHLY);
+        List<FeedBack> feedBackListWeekly = feedBackService.getFeedBackInBoundary(weeklyBoundary);
+        List<FeedBack> feedBackListMonthly = feedBackService.getFeedBackInBoundary(monthlyBoundary);
 
         List<ScoreCount> scoreCountWeekly = rankService.getScoreCount(feedBackListWeekly);
         List<ScoreCount> scoreCountMonthly = rankService.getScoreCount(feedBackListMonthly);
@@ -76,9 +82,10 @@ public class StatisticsFacade {
 
 
     public void calculateAndSaveRank(PeriodType periodType, LocalDate registerDate) {
-        LocalDate preDate = periodType.getStartOfPreviousPeriod(registerDate);
-        List<FeedBack> feedBackList = feedBackReader.getFeedBackInBoundary(preDate, registerDate);
-        rankService.calculateAndSave(feedBackList, periodType, preDate, registerDate);
+        Boundary boundary = boundaryMapper.mapBoundary(periodType, registerDate);
+        List<Menu> menuInBoundary = menuService.getMenuInBoundary(boundary);
+        List<FeedBack> feedBackByMenu = feedBackService.getFeedBackByMenu(menuInBoundary);
+        rankService.calculateAndSave(feedBackByMenu, periodType, registerDate);
     }
 
     @Transactional(readOnly = true)
@@ -88,19 +95,18 @@ public class StatisticsFacade {
 
     @Transactional(readOnly = true)
     public TrackingResponseDto getTrackingEvaluation(LocalDate localDate) {
-        return feedBackTracker.getTrackingEvaluation(localDate);
+        return feedBackService.getTrackingEvaluation(localDate);
     }
 
     @Transactional(readOnly = true)
     public List<DesiredFoodResponseDto> getDesiredFood(
-        LocalDate startDate, LocalDate endDate
+        DesiredFoodRequestDto desiredFoodRequestDto
     ) {
-        return desiredFoodService.getDesiredFoodTopN(
-            startDate, endDate, 3);
+        Boundary boundary = boundaryMapper.mapBoundary(desiredFoodRequestDto);
+        return desiredFoodService.getDesiredFoodTopN(boundary, 3);
     }
 
     public List<CategoryScoreAvgDto> getCategoryScore(LocalDate startDate, LocalDate endDate) {
-        return feedBackReader.getCategoryScore(startDate,
-            endDate);
+        return feedBackService.getCategoryScore(startDate, endDate);
     }
 }

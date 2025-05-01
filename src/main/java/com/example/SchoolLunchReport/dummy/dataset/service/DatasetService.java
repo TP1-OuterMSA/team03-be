@@ -17,7 +17,7 @@ import com.example.SchoolLunchReport.statistics.domain.desired.entity.DesiredFoo
 import com.example.SchoolLunchReport.statistics.domain.desired.repo.DesiredFoodJpaRepo;
 import com.example.SchoolLunchReport.statistics.domain.feedback.entity.FeedBack;
 import com.example.SchoolLunchReport.statistics.domain.feedback.repo.FeedBackJpaRepo;
-import com.example.SchoolLunchReport.statistics.support.RankImpl;
+import com.example.SchoolLunchReport.statistics.domain.rank.support.RankImpl;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,23 +1,19 @@
-package com.example.SchoolLunchReport.product.menu.service;
+package com.example.SchoolLunchReport.product.menu.support;
 
 import com.example.SchoolLunchReport.product.menu.domain.entity.Menu;
 import com.example.SchoolLunchReport.product.menu.repository.MenuJpaRepository;
-import com.example.SchoolLunchReport.product.menu.support.MenuReader;
 import com.example.SchoolLunchReport.statistics.domain.boundary.entity.Boundary;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class MenuService {
+public class MenuReader {
 
     final MenuJpaRepository menuJpaRepository;
-    final MenuReader menuReader;
 
     public List<Menu> getMenuInBoundary(Boundary boundary) {
-        return menuReader.getMenuInBoundary(boundary);
+        return menuJpaRepository.findByDateBetween(boundary.startDate(), boundary.endDate());
     }
-
-
 }

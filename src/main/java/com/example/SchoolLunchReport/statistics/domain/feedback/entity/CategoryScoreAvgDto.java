@@ -4,7 +4,7 @@ import com.example.SchoolLunchReport.product.food.domain.type.Category;
 
 public record CategoryScoreAvgDto(
     Category category,
-    Double totalScore
+    Double average
 ) {
 
 }
