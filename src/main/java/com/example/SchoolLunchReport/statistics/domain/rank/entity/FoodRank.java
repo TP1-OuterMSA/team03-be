@@ -26,7 +26,7 @@ public class FoodRank {
     Food food;
 
     LocalDate registerDate;
-
+  
     PeriodType periodType;
 
     Integer ranking;

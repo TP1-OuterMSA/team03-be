@@ -18,7 +18,7 @@ public class RankCalculator {
 
     private final Comparator<Entry<Food, Double>> topComparator = Map.Entry.<Food, Double>comparingByValue()
         .reversed();
-
+  
     public List<ScoreCount> getScoreCount(
         List<FeedBack> feedBackList
     ) {
