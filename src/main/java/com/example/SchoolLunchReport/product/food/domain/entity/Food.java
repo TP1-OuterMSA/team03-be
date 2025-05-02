@@ -14,11 +14,17 @@ public class Food {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
     private Category category;
+
     private String nutrition;
+
     private Double calorie;
+
     private String allergy;
+
     @Builder
     public Food(String name, Category category, String nutrition, Double calorie,
         String allergy) {

@@ -30,6 +30,7 @@ public class StatisticsController implements StatisticsControllerDocs {
 
     final StatisticsFacade statisticsFacade;
 
+    //**TODO 랭크 음식 몇개를 조회할지를 parameter 받도록 변경.
     @Override
     @GetMapping("/rank")
     public ApiResponse<?> getRankMenu(

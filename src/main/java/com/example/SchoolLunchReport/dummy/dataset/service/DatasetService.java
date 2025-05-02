@@ -187,8 +187,8 @@ public class DatasetService {
         );
         List<DesiredFood> desiredFoodList = new ArrayList<>();
         for (String desiredFood : desiredFoodData) {
-            String adjusted = llmClient.adjustMenuApi(AdjustMenuNameRequestDto.from(desiredFood));
-            desiredFoodList.add(DesiredFood.toEntity(adjusted));
+            String foodName = llmClient.adjustMenuApi(AdjustMenuNameRequestDto.from(desiredFood));
+            desiredFoodList.add(new DesiredFood(foodName));
         }
         desiredFoodJpaRepo.saveAll(desiredFoodList);
         return desiredFoodList;
