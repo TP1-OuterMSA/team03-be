@@ -39,17 +39,14 @@ public class StatisticsFacade {
     final RankService rankService;
     final BoundaryMapper boundaryMapper;
 
-
     @Transactional(readOnly = true)
     public CombinedRankMenuResponseDto getRankMenu(PeriodType periodType, LocalDate date) {
         List<RankMenuResponseDto> topRankMenuResponseDtos = rankService.getTopRankMenu(periodType,
             date);
         List<RankMenuResponseDto> bottomRankMenuResponseDtos = rankService.getBottomRankMenu(
             periodType, date);
-
         return CombinedRankMenuResponseDto.of(topRankMenuResponseDtos, bottomRankMenuResponseDtos);
     }
-
 
     @Transactional(readOnly = true)
     public CombinedStatisticsResponse getStatistics(LocalDate date) {
@@ -79,7 +76,6 @@ public class StatisticsFacade {
         return rankService.getTrendingMenu(periodType);
 
     }
-
 
     public void calculateAndSaveRank(PeriodType periodType, LocalDate registerDate) {
         Boundary boundary = boundaryMapper.mapBoundary(periodType, registerDate);

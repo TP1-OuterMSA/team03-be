@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-
 @NoArgsConstructor
 public class DesiredFood extends BaseTimeEntity {
 
@@ -24,11 +23,5 @@ public class DesiredFood extends BaseTimeEntity {
     @Builder
     public DesiredFood(String foodName) {
         this.foodName = foodName;
-    }
-
-    public static DesiredFood toEntity(String foodName) {
-        return DesiredFood.builder()
-            .foodName(foodName)
-            .build();
     }
 }

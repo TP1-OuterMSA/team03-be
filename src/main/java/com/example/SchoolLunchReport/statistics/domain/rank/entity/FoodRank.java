@@ -24,10 +24,15 @@ public class FoodRank {
 
     @ManyToOne
     Food food;
+
     LocalDate registerDate;
+  
     PeriodType periodType;
+
     Integer ranking;
+
     Double score;
+
     Integer previousRanking;
 
     private static final Integer NOT_CHANGE = 0;
