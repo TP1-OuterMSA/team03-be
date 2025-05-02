@@ -18,8 +18,7 @@ public class RankCalculator {
 
     private final Comparator<Entry<Food, Double>> topComparator = Map.Entry.<Food, Double>comparingByValue()
         .reversed();
-
-
+  
     public List<ScoreCount> getScoreCount(
         List<FeedBack> feedBackList
     ) {
@@ -77,7 +76,6 @@ public class RankCalculator {
 //            throw new IllegalArgumentException("해당 기간의 FoodRank 데이터가 없습니다.");
         }
         if (size % 2 == 1) {
-            // 홀수개인 경우, 가운데 값 반환
             return rankings.get(size / 2);
         } else {
             return (rankings.get(size / 2 - 1) + rankings.get(size / 2)) / 2;

@@ -10,11 +10,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface RankJpaRepo extends JpaRepository<FoodRank, Long> {
-
-
+  
     List<FoodRank> findTop5ByPeriodTypeAndRegisterDateOrderByRankingAsc(PeriodType periodType,
         LocalDate conditionDate);
-
+  
     List<FoodRank> findTop5ByPeriodTypeAndRegisterDateOrderByRankingDesc(PeriodType periodType,
         LocalDate conditionDate);
 
@@ -40,5 +39,4 @@ public interface RankJpaRepo extends JpaRepository<FoodRank, Long> {
     );
 
     List<FoodRank> findByPeriodTypeAndRegisterDate(PeriodType periodType, LocalDate startPeriod);
-
 }

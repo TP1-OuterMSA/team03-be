@@ -30,12 +30,14 @@ public class StatisticsController implements StatisticsControllerDocs {
 
     final StatisticsFacade statisticsFacade;
 
+
     @Override
     @GetMapping("/rank")
     public ApiResponse<?> getRankMenu(
         @RequestParam PeriodType periodType,
         @RequestParam(required = false) LocalDate date
     ) {
+        //TODO 랭크 음식 몇개를 조회할지를 parameter 받도록 변경.
         if (Objects.isNull(date)) {
             date = LocalDate.now();
         }
