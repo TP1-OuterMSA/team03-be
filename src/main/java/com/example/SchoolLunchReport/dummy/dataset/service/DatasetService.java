@@ -135,7 +135,6 @@ public class DatasetService {
             FeedBack feedBack = FeedBack.builder()
                 .score(randomScore)
                 .foodMenu(foodMenu)
-                .createdAt(registerDate)
                 .build();
             feedBackList.add(feedBack);
         }
