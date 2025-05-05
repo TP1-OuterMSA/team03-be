@@ -26,10 +26,9 @@ public class FeedBack extends BaseTimeEntity {
     private FoodMenu foodMenu;
     private String evaluation;
     @Builder
-    public FeedBack(Double score, FoodMenu foodMenu, String evaluation, LocalDate createdAt) {
+    public FeedBack(Double score, FoodMenu foodMenu, String evaluation) {
         this.score = score;
         this.foodMenu = foodMenu;
-        this.createdAt = createdAt;
         this.evaluation = evaluation;
     }
 
