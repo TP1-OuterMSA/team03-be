@@ -109,17 +109,13 @@ public class DatasetService {
                 throw new IllegalArgumentException("점수는 1~5 사이의 값이어야 합니다: " + dto.getScore());
             }
             FoodMenu foodMenu = foodMenuJpaRepository.findById(dto.getFoodMenuId())
-                .orElseThrow(() -> new IllegalArgumentException(
-                    "ID가 " + dto.getFoodMenuId() + "인 푸드메뉴를 찾을 수 없습니다"));
-            if (feedBackJpaRepo.existsByFoodMenuId(dto.getFoodMenuId())) {
-                continue;
-            }
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "ID가 " + dto.getFoodMenuId() + "인 푸드메뉴를 찾을 수 없습니다"));
             FeedBack feedBack = FeedBack.builder()
-                .score(dto.getScore())
-                .foodMenu(foodMenu)
-                .evaluation(dto.getEvaluation())
-                .build();
-            setField(feedBack, "foodMenu", foodMenu);
+                    .score(dto.getScore())
+                    .foodMenu(foodMenu)
+                    .evaluation(dto.getEvaluation())
+                    .build();
             feedBackList.add(feedBack);
         }
         feedBackJpaRepo.saveAll(feedBackList);
@@ -139,7 +135,6 @@ public class DatasetService {
             FeedBack feedBack = FeedBack.builder()
                 .score(randomScore)
                 .foodMenu(foodMenu)
-                .createdAt(registerDate)
                 .build();
             feedBackList.add(feedBack);
         }
