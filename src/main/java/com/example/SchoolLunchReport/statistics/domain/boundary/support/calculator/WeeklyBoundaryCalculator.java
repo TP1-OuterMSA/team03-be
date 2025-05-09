@@ -1,6 +1,6 @@
 package com.example.SchoolLunchReport.statistics.domain.boundary.support.calculator;
 
-import com.example.SchoolLunchReport.statistics.controller.dto.request.PeriodSpecDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.request.PeriodSpecRequestDto;
 import com.example.SchoolLunchReport.statistics.domain.boundary.entity.Boundary;
 import com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType;
 import java.time.DayOfWeek;
@@ -38,7 +38,7 @@ public class WeeklyBoundaryCalculator implements BoundaryCalculator {
     }
 
     @Override
-    public Boundary getBoundary(PeriodSpecDto periodSpecDto) {
+    public Boundary getBoundary(PeriodSpecRequestDto periodSpecRequestDto) {
         return null;
     }
 }

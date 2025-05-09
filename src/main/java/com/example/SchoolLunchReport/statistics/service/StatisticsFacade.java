@@ -7,7 +7,7 @@ import com.example.SchoolLunchReport.product.food.repository.dto.FoodFrequencyDt
 import com.example.SchoolLunchReport.product.food.service.FoodService;
 import com.example.SchoolLunchReport.product.menu.domain.entity.Menu;
 import com.example.SchoolLunchReport.product.menu.service.MenuService;
-import com.example.SchoolLunchReport.statistics.controller.dto.request.PeriodSpecDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.request.PeriodSpecRequestDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedRankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedStatisticsResponse;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.DesiredFoodResponseDto;
@@ -99,9 +99,9 @@ public class StatisticsFacade {
 
     @Transactional(readOnly = true)
     public List<DesiredFoodResponseDto> getDesiredFood(
-        PeriodSpecDto periodSpecDto
+        PeriodSpecRequestDto periodSpecRequestDto
     ) {
-        Boundary boundary = boundaryMapper.mapBoundary(periodSpecDto);
+        Boundary boundary = boundaryMapper.mapBoundary(periodSpecRequestDto);
         return desiredFoodService.getDesiredFoodTopN(boundary, 3);
     }
 
@@ -110,8 +110,8 @@ public class StatisticsFacade {
     }
 
     public List<FoodFrequencyDto> getMenuFrequencyByCategory(
-        PeriodSpecDto periodSpecDto) {
-        Boundary boundary = boundaryMapper.mapBoundary(periodSpecDto);
+        PeriodSpecRequestDto periodSpecRequestDto) {
+        Boundary boundary = boundaryMapper.mapBoundary(periodSpecRequestDto);
         return foodService.getFoodFrequencyByCategory(boundary);
     }
 }

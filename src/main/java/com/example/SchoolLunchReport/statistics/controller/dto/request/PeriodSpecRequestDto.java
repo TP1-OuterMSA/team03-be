@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.time.Month;
 
-public record PeriodSpecDto(
+public record PeriodSpecRequestDto(
     @NotNull
     @Schema(description = "타입", example = "MONTHLY, SEMESTER")
     PeriodType periodType,
