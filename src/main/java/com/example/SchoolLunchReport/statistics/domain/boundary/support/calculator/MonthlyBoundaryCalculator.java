@@ -2,7 +2,7 @@ package com.example.SchoolLunchReport.statistics.domain.boundary.support.calcula
 
 import static com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType.MONTHLY;
 
-import com.example.SchoolLunchReport.statistics.controller.dto.request.DesiredFoodRequestDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.request.PeriodSpecRequestDto;
 import com.example.SchoolLunchReport.statistics.domain.boundary.entity.Boundary;
 import com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType;
 import java.time.LocalDate;
@@ -43,9 +43,9 @@ public class MonthlyBoundaryCalculator implements BoundaryCalculator {
     }
 
     @Override
-    public Boundary getBoundary(DesiredFoodRequestDto desiredFoodRequestDto) {
-        Integer year = desiredFoodRequestDto.year();
-        int month = desiredFoodRequestDto.month().getValue();
+    public Boundary getBoundary(PeriodSpecRequestDto periodSpecRequestDto) {
+        Integer year = periodSpecRequestDto.year();
+        int month = periodSpecRequestDto.month().getValue();
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = LocalDate.of(year, month, startDate.lengthOfMonth());
         return new Boundary(startDate, endDate);

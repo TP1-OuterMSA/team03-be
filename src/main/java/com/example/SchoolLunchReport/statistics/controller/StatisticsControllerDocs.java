@@ -1,7 +1,7 @@
 package com.example.SchoolLunchReport.statistics.controller;
 
 import com.example.SchoolLunchReport.global.response.ApiResponse;
-import com.example.SchoolLunchReport.statistics.controller.dto.request.DesiredFoodRequestDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.request.PeriodSpecRequestDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.DesiredFoodResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.TrackingResponseDto;
 import com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType;
@@ -31,8 +31,13 @@ public interface StatisticsControllerDocs {
 
     @Operation(summary = "먹고 싶은 메뉴 조회")
     ApiResponse<List<DesiredFoodResponseDto>> getDesiredFood(
-        DesiredFoodRequestDto desiredFoodRequestDto);
+        PeriodSpecRequestDto periodSpecRequestDto);
 
     @Operation(summary = "카테고리별 평점 조회 API")
     ApiResponse<?> getCategoryScore(LocalDate startDate, LocalDate endDate);
+
+    @Operation(summary = "카테고리별 빈도 통계 조회 API")
+    ApiResponse<?> getMenuFrequencyByCategory(
+        PeriodSpecRequestDto periodSpecRequestDto
+    );
 }

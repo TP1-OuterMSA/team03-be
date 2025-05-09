@@ -1,6 +1,6 @@
 package com.example.SchoolLunchReport.statistics.domain.boundary.support;
 
-import com.example.SchoolLunchReport.statistics.controller.dto.request.DesiredFoodRequestDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.request.PeriodSpecRequestDto;
 import com.example.SchoolLunchReport.statistics.domain.boundary.entity.Boundary;
 import com.example.SchoolLunchReport.statistics.domain.boundary.support.calculator.BoundaryCalculator;
 import com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType;
@@ -26,10 +26,10 @@ public class BoundaryMapper {
         }
     }
 
-    public Boundary mapBoundary(DesiredFoodRequestDto desiredFoodRequestDto) {
-        PeriodType periodType = desiredFoodRequestDto.periodType();
+    public Boundary mapBoundary(PeriodSpecRequestDto periodSpecRequestDto) {
+        PeriodType periodType = periodSpecRequestDto.periodType();
         BoundaryCalculator boundaryCalculator = calculatorMap.get(periodType);
-        return boundaryCalculator.getBoundary(desiredFoodRequestDto);
+        return boundaryCalculator.getBoundary(periodSpecRequestDto);
     }
 
     public Boundary mapBoundary(PeriodType periodType, LocalDate conditionDate) {

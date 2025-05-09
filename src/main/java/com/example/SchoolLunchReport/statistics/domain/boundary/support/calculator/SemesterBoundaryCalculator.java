@@ -2,7 +2,7 @@ package com.example.SchoolLunchReport.statistics.domain.boundary.support.calcula
 
 import static com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType.SEMESTER;
 
-import com.example.SchoolLunchReport.statistics.controller.dto.request.DesiredFoodRequestDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.request.PeriodSpecRequestDto;
 import com.example.SchoolLunchReport.statistics.domain.boundary.entity.Boundary;
 import com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.domain.boundary.type.Semester;
@@ -34,9 +34,9 @@ public class SemesterBoundaryCalculator implements BoundaryCalculator {
     }
 
     @Override
-    public Boundary getBoundary(DesiredFoodRequestDto desiredFoodRequestDto) {
-        LocalDate startDate = getSemesterStartDate(desiredFoodRequestDto.year(),
-            desiredFoodRequestDto.semester());
+    public Boundary getBoundary(PeriodSpecRequestDto periodSpecRequestDto) {
+        LocalDate startDate = getSemesterStartDate(periodSpecRequestDto.year(),
+            periodSpecRequestDto.semester());
         LocalDate endDate = getSemesterEndDate(startDate);
         return new Boundary(startDate, endDate);
     }

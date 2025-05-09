@@ -1,7 +1,6 @@
 package com.example.SchoolLunchReport.product.menu.service;
 
 import com.example.SchoolLunchReport.product.menu.domain.entity.Menu;
-import com.example.SchoolLunchReport.product.menu.repository.MenuJpaRepository;
 import com.example.SchoolLunchReport.product.menu.support.MenuReader;
 import com.example.SchoolLunchReport.statistics.domain.boundary.entity.Boundary;
 import java.util.List;
@@ -12,12 +11,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MenuService {
 
-    final MenuJpaRepository menuJpaRepository;
     final MenuReader menuReader;
 
     public List<Menu> getMenuInBoundary(Boundary boundary) {
         return menuReader.getMenuInBoundary(boundary);
     }
-
-
 }
