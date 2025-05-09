@@ -3,9 +3,11 @@ package com.example.SchoolLunchReport.statistics.service;
 import static com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType.MONTHLY;
 import static com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType.WEEKLY;
 
+import com.example.SchoolLunchReport.product.food.repository.dto.FoodFrequencyDto;
+import com.example.SchoolLunchReport.product.food.service.FoodService;
 import com.example.SchoolLunchReport.product.menu.domain.entity.Menu;
 import com.example.SchoolLunchReport.product.menu.service.MenuService;
-import com.example.SchoolLunchReport.statistics.controller.dto.request.DesiredFoodRequestDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.request.PeriodSpecDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedRankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedStatisticsResponse;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.DesiredFoodResponseDto;
@@ -35,6 +37,7 @@ public class StatisticsFacade {
 
     final MenuService menuService;
     final FeedBackService feedBackService;
+    final FoodService foodService;
     final DesiredFoodService desiredFoodService;
     final RankService rankService;
     final BoundaryMapper boundaryMapper;
@@ -96,13 +99,19 @@ public class StatisticsFacade {
 
     @Transactional(readOnly = true)
     public List<DesiredFoodResponseDto> getDesiredFood(
-        DesiredFoodRequestDto desiredFoodRequestDto
+        PeriodSpecDto periodSpecDto
     ) {
-        Boundary boundary = boundaryMapper.mapBoundary(desiredFoodRequestDto);
+        Boundary boundary = boundaryMapper.mapBoundary(periodSpecDto);
         return desiredFoodService.getDesiredFoodTopN(boundary, 3);
     }
 
     public List<CategoryScoreAvgDto> getCategoryScore(LocalDate startDate, LocalDate endDate) {
         return feedBackService.getCategoryScore(startDate, endDate);
+    }
+
+    public List<FoodFrequencyDto> getMenuFrequencyByCategory(
+        PeriodSpecDto periodSpecDto) {
+        Boundary boundary = boundaryMapper.mapBoundary(periodSpecDto);
+        return foodService.getFoodFrequencyByCategory(boundary);
     }
 }
