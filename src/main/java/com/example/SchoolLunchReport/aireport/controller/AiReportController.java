@@ -3,22 +3,29 @@ import static com.example.SchoolLunchReport.global.common.Constants.ANALYTICS_TE
 import com.example.SchoolLunchReport.aireport.dto.AiReportRequestDto;
 import com.example.SchoolLunchReport.aireport.dto.AiReportResponseDto;
 import com.example.SchoolLunchReport.aireport.dto.ReportDownloadRequestDto;
+import com.example.SchoolLunchReport.aireport.dto.ReportListResponseDto;
 import com.example.SchoolLunchReport.aireport.service.AiReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(ANALYTICS_TEAM_URL + "/aireport")
 @RequiredArgsConstructor
 public class AiReportController {
     private final AiReportService aiReportService;
+
+    @GetMapping("/get-all")
+    public ResponseEntity<List<ReportListResponseDto>> getAllReports() {
+        List<ReportListResponseDto> reports = aiReportService.getAllReports();
+        return ResponseEntity.ok(reports);
+    }
+
     @PostMapping("/generate")
     public ResponseEntity<AiReportResponseDto> generateReport(@RequestBody AiReportRequestDto requestDto) {
         AiReportResponseDto responseDto = aiReportService.generateReport(requestDto);

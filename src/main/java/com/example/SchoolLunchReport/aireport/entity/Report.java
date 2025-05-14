@@ -19,6 +19,8 @@ public class Report {
     private Long id;
     @Column(columnDefinition = "TEXT")
     private String report;
+    @Column
+    private String name;
     @CreatedDate
     private LocalDateTime createdAt;
 }
