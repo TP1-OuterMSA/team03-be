@@ -22,7 +22,7 @@ public class Food {
     private Long id;
 
     private String name;
-
+  
     @Enumerated(value = EnumType.STRING)
     private Category category;
 

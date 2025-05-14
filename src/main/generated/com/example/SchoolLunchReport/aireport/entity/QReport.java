@@ -23,6 +23,8 @@ public class QReport extends EntityPathBase<Report> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath name = createString("name");
+
     public final StringPath report = createString("report");
 
     public QReport(String variable) {

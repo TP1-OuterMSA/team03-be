@@ -3,6 +3,7 @@ package com.example.SchoolLunchReport.aireport.service;
 import com.example.SchoolLunchReport.aireport.dto.AiReportDataDto;
 import com.example.SchoolLunchReport.aireport.dto.AiReportRequestDto;
 import com.example.SchoolLunchReport.aireport.dto.AiReportResponseDto;
+import com.example.SchoolLunchReport.aireport.dto.ReportListResponseDto;
 import com.example.SchoolLunchReport.aireport.entity.Report;
 import com.example.SchoolLunchReport.aireport.repository.ReportRepository;
 import com.example.SchoolLunchReport.product.FoodMenu.domain.entity.FoodMenu;
@@ -58,6 +59,18 @@ public class AiReportService {
     private final RestTemplate restTemplate;
 
     private static final int MAX_DATA_COUNT = 100;
+
+    public List<ReportListResponseDto> getAllReports() {
+        List<Report> reports = reportRepository.findAll();
+        return reports.stream()
+                .map(report -> ReportListResponseDto.builder()
+                        .id(report.getId())
+                        .report(report.getReport())
+                        .name(report.getName())
+                        .createdAt(report.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+    }
 
     public AiReportResponseDto generateReport(AiReportRequestDto requestDto) {
         try {
@@ -242,6 +255,7 @@ public class AiReportService {
             HttpEntity<String> requestEntity = new HttpEntity<>(jsonBody, headers);
 
             String djangoUrl = "http://k8s-msaservices-7d023f0bb9-676035063.ap-northeast-2.elb.amazonaws.com/api/team3/llmchatbot/create_report/";
+            // String djangoUrl = "http://127.0.0.1:8000/api/team3/llmchatbot/create_report/";
 
             ResponseEntity<Map> response = restTemplate.exchange(
                 djangoUrl,
@@ -255,8 +269,11 @@ public class AiReportService {
             String message = (String) response.getBody().get("message");
             String reportText = (String) response.getBody().get("report");
 
+            String name = "기간: " + reportData.getPeriod_data() + " 동안의 ai보고서";
+
             Report savedReport = reportRepository.save(Report.builder()
                 .report(reportText)
+                .name(name)
                 .build());
 
             return AiReportResponseDto.builder()
