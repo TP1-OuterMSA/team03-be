@@ -1,6 +1,5 @@
 package com.example.SchoolLunchReport.statistics.controller.dto.request;
 
-
 import com.example.SchoolLunchReport.statistics.domain.boundary.type.PeriodType;
 import com.example.SchoolLunchReport.statistics.domain.boundary.type.Semester;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,7 +9,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.time.Month;
 
-public record DesiredFoodRequestDto(
+public record PeriodSpecRequestDto(
     @NotNull
     @Schema(description = "타입", example = "MONTHLY, SEMESTER")
     PeriodType periodType,
@@ -32,5 +31,5 @@ public record DesiredFoodRequestDto(
             return semester != null;
         }
     }
-}
 
+}

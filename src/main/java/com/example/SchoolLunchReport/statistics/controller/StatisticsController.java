@@ -4,7 +4,8 @@ import static com.example.SchoolLunchReport.global.common.Constants.ANALYTICS_TE
 
 import com.example.SchoolLunchReport.global.response.ApiResponse;
 import com.example.SchoolLunchReport.global.response.type.SuccessType;
-import com.example.SchoolLunchReport.statistics.controller.dto.request.DesiredFoodRequestDto;
+import com.example.SchoolLunchReport.product.food.repository.dto.FoodFrequencyDto;
+import com.example.SchoolLunchReport.statistics.controller.dto.request.PeriodSpecRequestDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.CombinedRankMenuResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.DesiredFoodResponseDto;
 import com.example.SchoolLunchReport.statistics.controller.dto.response.RankMenuResponseDto;
@@ -79,10 +80,10 @@ public class StatisticsController implements StatisticsControllerDocs {
 
     @GetMapping("/desired-food/{periodType}")
     public ApiResponse<List<DesiredFoodResponseDto>> getDesiredFood(
-        @Valid @ModelAttribute DesiredFoodRequestDto desiredFoodRequestDto
+        @Valid @ModelAttribute PeriodSpecRequestDto periodSpecRequestDto
     ) {
         List<DesiredFoodResponseDto> desiredFoodResponseDto = statisticsFacade.getDesiredFood(
-            desiredFoodRequestDto);
+            periodSpecRequestDto);
         return ApiResponse.success(SuccessType.SUCCESS, desiredFoodResponseDto);
     }
 
@@ -97,4 +98,13 @@ public class StatisticsController implements StatisticsControllerDocs {
         return ApiResponse.success(SuccessType.SUCCESS, categoryScore);
     }
 
+    @Override
+    @GetMapping("/food/frequency")
+    public ApiResponse<?> getMenuFrequencyByCategory(
+        @Valid @ModelAttribute PeriodSpecRequestDto periodSpecRequestDto
+    ) {
+        List<FoodFrequencyDto> menuFrequencyByCategory = statisticsFacade.getMenuFrequencyByCategory(
+            periodSpecRequestDto);
+        return ApiResponse.success(SuccessType.SUCCESS, menuFrequencyByCategory);
+    }
 }

@@ -31,6 +31,8 @@ public class QFood extends EntityPathBase<Food> {
 
     public final StringPath nutrition = createString("nutrition");
 
+    public final EnumPath<com.example.SchoolLunchReport.product.food.domain.type.SubCategory> subCategory = createEnum("subCategory", com.example.SchoolLunchReport.product.food.domain.type.SubCategory.class);
+
     public QFood(String variable) {
         super(Food.class, forVariable(variable));
     }
