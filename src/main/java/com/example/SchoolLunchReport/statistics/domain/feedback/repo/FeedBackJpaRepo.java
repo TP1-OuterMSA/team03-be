@@ -3,8 +3,11 @@ package com.example.SchoolLunchReport.statistics.domain.feedback.repo;
 import com.example.SchoolLunchReport.product.FoodMenu.domain.entity.FoodMenu;
 import com.example.SchoolLunchReport.statistics.domain.feedback.entity.FeedBack;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -17,4 +20,9 @@ public interface FeedBackJpaRepo extends JpaRepository<FeedBack, Long>, Feedback
     List<FeedBack> findByCreatedAt(LocalDate startDate);
 
     List<FeedBack> findByFoodMenu(FoodMenu foodMenu);
+    List<FeedBack> findByFoodMenuIdInAndCreatedAtBetween(
+            List<Long> foodMenuIds,
+            LocalDate startDate,
+            LocalDate endDate);
+
 }
