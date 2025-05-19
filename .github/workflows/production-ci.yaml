@@ -1,14 +1,12 @@
 name: Production Deploy
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - 'production-test'
 
 jobs:
   deploy-to-production:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     env:
