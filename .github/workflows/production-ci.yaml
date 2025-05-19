@@ -45,7 +45,7 @@ jobs:
 
       - name: Update values.yaml with new image tag
         run: |
-          cd ec2-infra-be/ec2-infra-be/charts/services/team03-be
+          cd ec2-infra-be/charts/services/team03-be
           sed -i "s/tag: .*/tag: ${IMAGE_TAG}/" values.yaml
 
       - name: Commit and push updated values.yaml
