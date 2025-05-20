@@ -1,1 +1,9 @@
-rootProject.name = 'SchoolLunchReport'
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'root-project'
+include(":avro-schemas")
