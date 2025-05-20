@@ -47,7 +47,7 @@ public class ReviewEventConsumer {
             String foodMenuDate = reviewEvent.getMealdayInfo();
             LocalDate menuDate = LocalDate.parse(foodMenuDate);
             MealType mealType = MealType.getInstance(reviewEvent.getMealType());
-            log.info("mealType" + mealType + " " + reviewEvent.getMealType());
+            log.info("mealType{} {}", mealType, reviewEvent.getMealType());
             Menu menu = menuReader.getMenuByDateAndType(menuDate, mealType);
 
             Evaluation evaluation = Evaluation
