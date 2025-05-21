@@ -44,7 +44,7 @@ public class MenuEventConsumer {
         menuRepository.save(menu);
 
         for (String foodName : foodNames) {
-            log.info("meal event 발생 >> 음식 이름: " + foodNames);
+            log.info("meal event 발생 >> 음식 이름: {}", foodNames);
             Optional<Food> optionFood = foodRepository.findByName(foodName);
             if (optionFood.isEmpty()) {
                 try {
