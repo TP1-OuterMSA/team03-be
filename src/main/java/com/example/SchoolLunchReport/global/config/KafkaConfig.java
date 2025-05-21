@@ -1,5 +1,6 @@
 package com.example.SchoolLunchReport.global.config;
 
+import com.example.kafka_schemas.MealEvent;
 import com.example.kafka_schemas.ReviewEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,13 +14,25 @@ import org.springframework.kafka.listener.ContainerProperties;
 public class KafkaConfig {
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ReviewEvent> kafkaListenerContainerFactory(
-        ConsumerFactory<String, ReviewEvent> consumerFactory
+    public ConcurrentKafkaListenerContainerFactory<String, ReviewEvent> kafkaListenerContainerReviewFactory(
+        ConsumerFactory<String, ReviewEvent> reviewConsumerFactory
     ) {
         ConcurrentKafkaListenerContainerFactory<String, ReviewEvent> factory =
             new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory);
+        factory.setConsumerFactory(reviewConsumerFactory);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL); // 중요!!
         return factory;
     }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, MealEvent> kafkaListenerContainerMenuFactory(
+        ConsumerFactory<String, MealEvent> mealConsumerFactory
+    ) {
+        ConcurrentKafkaListenerContainerFactory<String, MealEvent> factory =
+            new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(mealConsumerFactory);
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL); // 중요!!
+        return factory;
+    }
+
 }

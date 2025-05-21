@@ -38,7 +38,7 @@ public class ReviewEventConsumer {
     @KafkaListener(
         topics = "review.events",
         groupId = "review-group",
-        containerFactory = "kafkaListenerContainerFactory" // 수동 커밋을 위한 팩토리 지정
+        containerFactory = "kafkaListenerContainerReviewFactory" // 수동 커밋을 위한 팩토리 지정
     )
     @Transactional
     public void consume(ReviewEvent reviewEvent, Acknowledgment ack) {

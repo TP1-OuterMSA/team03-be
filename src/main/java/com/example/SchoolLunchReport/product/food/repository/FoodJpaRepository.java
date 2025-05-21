@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface FoodJpaRepository extends JpaRepository<Food, Long>, FoodRepositoryCustom {
 
     List<Food> findByCategory(Category category);
-    
+
     Optional<Food> findByName(String foodName);
+
 }
