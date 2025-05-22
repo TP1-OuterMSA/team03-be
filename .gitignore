@@ -1,7 +1,7 @@
 .gradle
 **/build/
 !src/**/build/
-
+application.yml
 # Ignore Gradle GUI config
 gradle-app.setting
 
@@ -21,3 +21,4 @@ gradle-app.setting
 .classpath
 
 .idea/
+
