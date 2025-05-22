@@ -3,7 +3,7 @@ package com.example.SchoolLunchReport.product.menu.domain.type;
 import java.util.Arrays;
 
 public enum MealType {
-    BREAK_FAST, LUNCH, DINNER
+    BREAK_FAST, LUNCH, DINNER;
 
     public static MealType getInstance(String mealType) {
         return Arrays.stream(MealType.values())
