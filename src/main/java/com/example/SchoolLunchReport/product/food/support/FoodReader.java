@@ -25,4 +25,10 @@ public class FoodReader {
             () -> new EntityNotFoundException("없는 음식 이름 입니다.")
         );
     }
+
+    public Food getFoodById(Long foodId) {
+        return foodJpaRepository.findById(foodId).orElseThrow(
+            () -> new EntityNotFoundException("없는 음식 아이디입니다")
+        );
+    }
 }
