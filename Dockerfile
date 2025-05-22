@@ -5,10 +5,12 @@ WORKDIR /app
 
 COPY . .
 
-# QueryDSL Q클래스 생성 오류 해결을 위해 기존 generated 디렉토리 삭제
-RUN rm -rf /app/build/generated
+# 빌드 디렉토리 전체를 삭제하고 모든 Q 파일 제거
+RUN rm -rf /app/build
+RUN find /app -name "Q*.java" -type f -delete
 
-RUN ./gradlew clean build -x test
+RUN ./gradlew clean
+RUN ./gradlew build -x test
 
 RUN ls -la /app/build/libs/  # JAR 파일 확인용 명령어
 
