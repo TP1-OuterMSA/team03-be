@@ -50,8 +50,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 
     //avro
-    implementation 'org.apache.avro:avro:1.11.4'
     implementation 'io.confluent:kafka-avro-serializer:7.6.0'
+    implementation 'org.apache.avro:avro:1.11.4'
 
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
@@ -73,7 +73,7 @@ dependencies {
     // 코사인 유사도
     implementation 'org.apache.commons:commons-text:1.10.0'
 }
-def querydslDir = "src/main/generated"
+def querydslDir = "src/main/generated/query/"
 
 sourceSets {
     main.java.srcDirs += querydslDir
@@ -83,14 +83,14 @@ tasks.withType(JavaCompile).configureEach {
     options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
 }
 
-avro {
-    fieldVisibility = "PRIVATE"
-}
-
-clean {
-    delete file(querydslDir)
-}
+//clean {
+//    delete file(querydslDir)
+//}
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+avro {
+    outputCharacterEncoding = "UTF-8"
 }
 
