@@ -12,8 +12,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
+@Repository
 public class FeedBackJpaRepoImpl implements FeedbackRepositoryCustom {
 
     final JPAQueryFactory queryFactory;
