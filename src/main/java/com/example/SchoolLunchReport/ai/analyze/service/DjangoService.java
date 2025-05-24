@@ -4,6 +4,7 @@ import com.example.SchoolLunchReport.ai.analyze.dto.FoodEvaluationRequestDto;
 import com.example.SchoolLunchReport.ai.analyze.dto.FoodEvaluationResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,9 +17,8 @@ public class DjangoService {
 
     private final RestTemplate chatbotRestTemplate;
 
-    //private static final String DJANGO_BASE_URL = "http://127.0.0.1:8000/api/team3/llmchatbot/detail_food_analyze/";
-    private static final String DJANGO_BASE_URL = "http://k8s-msaservices-7d023f0bb9-676035063.ap-northeast-2.elb.amazonaws.com/api/team3/llmchatbot/detail_food_analyze/";
-
+    @Value("${llm.food-analyze-url}")
+    private String djangoBaseUrl;
 
     public DjangoService(@Qualifier("chatbotRestTemplate") RestTemplate chatbotRestTemplate) {
         this.chatbotRestTemplate = chatbotRestTemplate;
@@ -35,7 +35,7 @@ public class DjangoService {
             HttpEntity<FoodEvaluationRequestDto> request = new HttpEntity<>(requestDto, headers);
 
             FoodEvaluationResponseDto response = chatbotRestTemplate.postForObject(
-                    DJANGO_BASE_URL, request, FoodEvaluationResponseDto.class);
+                    djangoBaseUrl, request, FoodEvaluationResponseDto.class);
 
             return response;
         } catch (Exception e) {

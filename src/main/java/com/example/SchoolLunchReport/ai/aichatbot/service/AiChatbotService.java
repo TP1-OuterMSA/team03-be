@@ -20,6 +20,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -45,8 +46,13 @@ public class AiChatbotService {
 
     @Qualifier("chatbotRestTemplate")
     private final RestTemplate chatbotRestTemplate;
-    // private static final String DJANGO_BASE_URL = "http://127.0.0.1:8000/api/team3/llmchatbot/basic_chatbot_request/";
-    private static final String DJANGO_BASE_URL = "http://k8s-msaservices-7d023f0bb9-676035063.ap-northeast-2.elb.amazonaws.com/api/team3/llmchatbot/basic_chatbot_request/";
+
+    @Value("${llm.base-url}")
+    private String djangoBaseUrl;
+
+    @Value("${llm.agent-url}")
+    private String djangoAgentUrl;
+
     public ChatbotResponseDto forwardToDjango(ChatbotRequestDto requestDto) {
         try {
             log.info("Forwarding request to Django - Category: {}, Question: {}",
@@ -58,7 +64,7 @@ public class AiChatbotService {
             HttpEntity<ChatbotRequestDto> request = new HttpEntity<>(requestDto, headers);
 
             ChatbotResponseDto response = chatbotRestTemplate.postForObject(
-                    DJANGO_BASE_URL, request, ChatbotResponseDto.class);
+                    djangoBaseUrl, request, ChatbotResponseDto.class);
 
             return response;
         } catch (Exception e) {
@@ -72,36 +78,6 @@ public class AiChatbotService {
         }
     }
 
-
-
-
-    // private static final String DJANGO_AGENT_URL = "http://127.0.0.1:8000/api/team3/llmchatbot/agent_chatbot_request/";
-    private static final String DJANGO_AGENT_URL = "http://k8s-msaservices-7d023f0bb9-676035063.ap-northeast-2.elb.amazonaws.com/api/team3/llmchatbot/agent_chatbot_request/";
-
-//    public AgentChatbotResponseDto forwardAgentToDjango(AgentChatbotRequestDto requestDto) {
-//        try {
-//            log.info("Forwarding agent request to Django - Question: {}", requestDto.getQuestion());
-//
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.APPLICATION_JSON);
-//
-//            HttpEntity<AgentChatbotRequestDto> request = new HttpEntity<>(requestDto, headers);
-//
-//            AgentChatbotResponseDto response = chatbotRestTemplate.postForObject(
-//                    DJANGO_AGENT_URL, request, AgentChatbotResponseDto.class);
-//
-//            return response;
-//        } catch (Exception e) {
-//            log.error("Error forwarding agent request to Django: {}", e.getMessage());
-//
-//            AgentChatbotResponseDto errorResponse = new AgentChatbotResponseDto();
-//            errorResponse.setMessage("Django 서비스와 통신 중 오류가 발생했습니다");
-//            errorResponse.setAnswer(null);
-//            errorResponse.setChainOfThought(null);
-//
-//            return errorResponse;
-//        }
-//    }
     @Transactional
     public AgentChatbotResponseDto forwardAgentToDjango(AgentChatbotRequestDto requestDto) {
         try {
@@ -122,7 +98,7 @@ public class AiChatbotService {
             HttpEntity<AgentChatbotRequestDto> request = new HttpEntity<>(requestDto, headers);
 
             AgentChatbotResponseDto response = chatbotRestTemplate.postForObject(
-                    DJANGO_AGENT_URL, request, AgentChatbotResponseDto.class);
+                    djangoAgentUrl, request, AgentChatbotResponseDto.class);
 
             if (response != null && response.getAnswer() != null) {
                 saveChatbotResponse(question, response);
