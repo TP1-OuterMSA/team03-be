@@ -5,7 +5,12 @@ WORKDIR /app
 
 COPY . .
 
-RUN ./gradlew clean build -x test
+# 빌드 디렉토리 전체를 삭제하고 모든 Q 파일 제거
+RUN rm -rf /app/build
+RUN find /app -name "Q*.java" -type f -delete
+
+RUN ./gradlew clean
+RUN ./gradlew build -x test
 
 RUN ls -la /app/build/libs/  # JAR 파일 확인용 명령어
 

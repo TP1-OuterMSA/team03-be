@@ -1,0 +1,13 @@
+package com.example.SchoolLunchReport.aichatbot.dto;
+
+import lombok.Data;
+import java.util.List;
+import java.util.Map;
+
+@Data
+public class AgentChatbotResponseDto {
+    private String message;
+    private String answer;
+    private List<Map<String, Object>> relevant_documents;
+    private String chainOfThought;
+}
