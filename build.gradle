@@ -14,7 +14,7 @@ java {
     }
 }
 
-def querydslDir = "src/main/generated/query"
+def querydslDir = "src/main/generated"
 
 configurations {
     compileOnly {
@@ -90,9 +90,12 @@ sourceSets {
     }
 }
 
-clean {
-    delete file(querydslDir)
+tasks.named('clean') {
+    doFirst {
+        delete querydslDir
+    }
 }
+
 // Avro 설정
 avro {
     outputCharacterEncoding = "UTF-8"
