@@ -1,5 +1,5 @@
 package com.example.SchoolLunchReport.dummy.dataset.dto;
-import com.example.SchoolLunchReport.product.menu.domain.type.MealType;
+import com.example.SchoolLunchReport.domain.product.menu.domain.type.MealType;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;

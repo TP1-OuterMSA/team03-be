@@ -14,6 +14,8 @@ java {
     }
 }
 
+def querydslDir = "src/main/generated"
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -26,71 +28,87 @@ repositories {
 }
 
 dependencies {
-    // 개발도구
+    // 개발 도구
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // swagger
+    // Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
-    implementation "io.swagger.core.v3:swagger-annotations:2.2.15"
+    implementation 'io.swagger.core.v3:swagger-annotations:2.2.15'
 
-    // db
+    // DB
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    // 테스트
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    // monitoring
+    // 모니터링
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 
-    //kafka
+    // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 
-    //avro
+    // Avro
     implementation 'io.confluent:kafka-avro-serializer:7.6.0'
     implementation 'org.apache.avro:avro:1.11.4'
 
+    // QueryDSL
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+    compileOnly 'com.querydsl:querydsl-apt:5.0.0:jakarta'
     annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
     annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
 
-    // Markdown -> HTML
+    // Markdown → HTML
     implementation 'com.vladsch.flexmark:flexmark-all:0.64.0'
-    // HTML -> PDF
+
+    // HTML → PDF
     implementation 'com.openhtmltopdf:openhtmltopdf-core:1.0.10'
     implementation 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10'
     implementation 'com.itextpdf:itextpdf:5.5.13.3'
     implementation 'com.itextpdf.tool:xmlworker:5.5.13.3'
-    implementation 'com.vladsch.flexmark:flexmark-all:0.64.0'
-
-    // monitoring
-    implementation 'io.micrometer:micrometer-registry-prometheus'
 
     // 코사인 유사도
     implementation 'org.apache.commons:commons-text:1.10.0'
 }
-def querydslDir = "src/main/generated/query/"
 
-sourceSets {
-    main.java.srcDirs += querydslDir
+
+tasks.named('clean') {
+    doFirst {
+        delete 'src/main/generated'
+        delete 'build'
+    }
 }
 
+// QueryDSL 소스 디렉토리 등록
 tasks.withType(JavaCompile).configureEach {
     options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
 }
 
-//clean {
-//    delete file(querydslDir)
-//}
-tasks.named('test') {
-    useJUnitPlatform()
+sourceSets {
+    main {
+        java {
+            srcDirs += querydslDir
+        }
+    }
 }
 
+// Avro 설정
 avro {
     outputCharacterEncoding = "UTF-8"
+    createSetters = true
+}
+
+// 의존성 순서 보장: Avro → Java 컴파일
+compileJava.dependsOn("generateAvroJava")
+
+// 테스트 설정
+tasks.named('test') {
+    useJUnitPlatform()
 }
 
