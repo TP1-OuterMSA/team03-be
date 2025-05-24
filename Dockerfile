@@ -5,9 +5,10 @@ WORKDIR /app
 
 COPY . .
 
-# 빌드 디렉토리 전체를 삭제하고 모든 Q 파일 제거
-RUN rm -rf /app/build
-RUN find /app -name "Q*.java" -type f -delete
+# generated 폴더와 build 폴더 완전 삭제 & Q 파일 제거
+RUN rm -rf /app/src/main/generated && \
+    rm -rf /app/build && \
+    find /app -name "Q*.java" -type f -delete
 
 RUN ./gradlew clean
 RUN ./gradlew build -x test
