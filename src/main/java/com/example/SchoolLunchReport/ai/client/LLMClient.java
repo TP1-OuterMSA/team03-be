@@ -39,6 +39,7 @@ public class LLMClient {
             request,
             JsonNode.class
         );
+        assert jsonNode != null;
         return removeSurroundingQuotes(jsonNode.get("food_name").toString());
     }
 
