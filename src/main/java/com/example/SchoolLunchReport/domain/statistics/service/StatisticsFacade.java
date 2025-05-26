@@ -7,7 +7,6 @@ import com.example.SchoolLunchReport.domain.product.food.repository.dto.FoodFreq
 import com.example.SchoolLunchReport.domain.product.food.service.FoodService;
 import com.example.SchoolLunchReport.domain.product.menu.domain.entity.Menu;
 import com.example.SchoolLunchReport.domain.product.menu.service.MenuService;
-import com.example.SchoolLunchReport.domain.statistics.domain.rank.service.RankService;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.request.PeriodSpecRequestDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.CombinedRankMenuResponseDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.CombinedStatisticsResponse;
@@ -20,10 +19,11 @@ import com.example.SchoolLunchReport.domain.statistics.domain.boundary.entity.Bo
 import com.example.SchoolLunchReport.domain.statistics.domain.boundary.support.BoundaryMapper;
 import com.example.SchoolLunchReport.domain.statistics.domain.boundary.type.PeriodType;
 import com.example.SchoolLunchReport.domain.statistics.domain.desired.service.DesiredFoodService;
-import com.example.SchoolLunchReport.domain.statistics.domain.feedback.entity.CategoryScoreAvgDto;
 import com.example.SchoolLunchReport.domain.statistics.domain.feedback.entity.FeedBack;
+import com.example.SchoolLunchReport.domain.statistics.domain.feedback.repo.dto.CategoryScoreAvgDto;
 import com.example.SchoolLunchReport.domain.statistics.domain.feedback.service.FeedBackService;
 import com.example.SchoolLunchReport.domain.statistics.domain.rank.entity.FoodRank;
+import com.example.SchoolLunchReport.domain.statistics.domain.rank.service.RankService;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
