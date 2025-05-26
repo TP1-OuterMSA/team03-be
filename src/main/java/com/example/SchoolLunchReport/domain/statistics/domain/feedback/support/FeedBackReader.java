@@ -1,10 +1,10 @@
 package com.example.SchoolLunchReport.domain.statistics.domain.feedback.support;
 
 import com.example.SchoolLunchReport.domain.product.menu.domain.entity.Menu;
-import com.example.SchoolLunchReport.domain.statistics.domain.feedback.entity.CategoryScoreAvgDto;
+import com.example.SchoolLunchReport.domain.statistics.domain.boundary.entity.Boundary;
 import com.example.SchoolLunchReport.domain.statistics.domain.feedback.entity.FeedBack;
 import com.example.SchoolLunchReport.domain.statistics.domain.feedback.repo.FeedBackJpaRepo;
-import com.example.SchoolLunchReport.domain.statistics.domain.boundary.entity.Boundary;
+import com.example.SchoolLunchReport.domain.statistics.domain.feedback.repo.dto.CategoryScoreAvgDto;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class FeedBackReader {
     }
 
     public List<CategoryScoreAvgDto> getCategoryScore(LocalDate startDate, LocalDate endDate) {
-        List<CategoryScoreAvgDto> categoryScoreAvgDtos = feedBackJpaRepo.sumScoreByCategoryBetween(
+        List<CategoryScoreAvgDto> categoryScoreAvgDtos = feedBackJpaRepo.getAvgScoreByCategory(
             startDate, endDate);
         return categoryScoreAvgDtos.stream()
             .map(dto -> new CategoryScoreAvgDto(
