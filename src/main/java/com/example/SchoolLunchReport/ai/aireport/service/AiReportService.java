@@ -26,13 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -266,7 +260,7 @@ public class AiReportService {
 
             System.out.println("Response from Django: " + response.getBody());
 
-            String message = (String) response.getBody().get("message");
+            String message = (String) Objects.requireNonNull(response.getBody()).get("message");
             String reportText = (String) response.getBody().get("report");
 
             String name = "기간: " + reportData.getPeriod_data() + " 동안의 ai보고서";
