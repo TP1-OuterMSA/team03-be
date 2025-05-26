@@ -2,8 +2,6 @@ package com.example.SchoolLunchReport.domain.statistics.controller;
 
 import static com.example.SchoolLunchReport.global.common.Constants.ANALYTICS_TEAM_URL;
 
-import com.example.SchoolLunchReport.global.response.ApiResponse;
-import com.example.SchoolLunchReport.global.response.type.SuccessType;
 import com.example.SchoolLunchReport.domain.product.food.repository.dto.FoodFrequencyDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.request.PeriodSpecRequestDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.CombinedRankMenuResponseDto;
@@ -11,8 +9,10 @@ import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.D
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.RankMenuResponseDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.TrackingResponseDto;
 import com.example.SchoolLunchReport.domain.statistics.domain.boundary.type.PeriodType;
-import com.example.SchoolLunchReport.domain.statistics.domain.feedback.entity.CategoryScoreAvgDto;
+import com.example.SchoolLunchReport.domain.statistics.domain.feedback.repo.dto.CategoryScoreAvgDto;
 import com.example.SchoolLunchReport.domain.statistics.service.StatisticsFacade;
+import com.example.SchoolLunchReport.global.response.ApiResponse;
+import com.example.SchoolLunchReport.global.response.type.SuccessType;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
