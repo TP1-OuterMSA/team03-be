@@ -1,7 +1,8 @@
 package com.example.SchoolLunchReport.domain.product.food.service;
 
-import com.example.SchoolLunchReport.domain.product.food.support.FoodReader;
+import com.example.SchoolLunchReport.domain.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.domain.product.food.repository.dto.FoodFrequencyDto;
+import com.example.SchoolLunchReport.domain.product.food.support.FoodReader;
 import com.example.SchoolLunchReport.domain.statistics.domain.boundary.entity.Boundary;
 import java.util.Comparator;
 import java.util.List;
@@ -20,5 +21,9 @@ public class FoodService {
         return foodReader.getFoodFrequencyInBoundary(boundary).stream()
             .sorted(Comparator.comparing(FoodFrequencyDto::category))
             .collect(Collectors.toList());
+    }
+
+    public List<Food> getFoodList() {
+        return foodReader.getFoodAll();
     }
 }
