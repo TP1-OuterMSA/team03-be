@@ -12,7 +12,7 @@ public record SuggestionListItemResponseDto(
     String title,
     String nickName,
     Category category,
-    @JsonFormat(pattern = "YYYY-MM-DD")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate createAt
 ) {
 

@@ -1,6 +1,5 @@
 package com.example.SchoolLunchReport.domain.suggestion.service;
 
-import com.example.SchoolLunchReport.domain.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.domain.product.food.support.FoodReader;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.CreateSuggestionRequestDto;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.SuggestionSpecRequestDto;
@@ -19,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional()
+@Transactional
 @RequiredArgsConstructor
 public class SuggestionService {
 
@@ -27,8 +26,7 @@ public class SuggestionService {
     final FoodReader foodReader;
 
     public String createSuggestion(CreateSuggestionRequestDto createSuggestionRequestDto) {
-        Food food = foodReader.getFoodById(createSuggestionRequestDto.foodId());
-        Suggestion suggestion = createSuggestionRequestDto.toEntity(food);
+        Suggestion suggestion = createSuggestionRequestDto.toEntity();
         suggestionJpaRepo.save(suggestion);
         return suggestion.getTitle();
     }
@@ -53,9 +51,8 @@ public class SuggestionService {
         Long suggestionId,
         UpdateSuggestionRequestDto updateSuggestionRequestDto
     ) {
-        Food food = foodReader.getFoodById(updateSuggestionRequestDto.foodId());
         Suggestion suggestion = findSuggestionById(suggestionId);
-        suggestion.update(updateSuggestionRequestDto, food);
+        suggestion.update(updateSuggestionRequestDto);
         return SuggestionResponseDto.toEntity(suggestion);
 
     }
@@ -67,7 +64,7 @@ public class SuggestionService {
             .id(suggestionId)
             .build();
     }
-
+    
     private Suggestion findSuggestionById(Long suggestionId) {
         return suggestionJpaRepo.findById(suggestionId).orElseThrow(
             () -> new EntityNotFoundException("존재하지 않는 건의입니다.")
