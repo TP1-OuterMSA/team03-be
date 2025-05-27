@@ -13,7 +13,7 @@ public record SuggestionResponseDto(
     String nickName,
     Category category,
     String content,
-    @JsonFormat(pattern = "YYYY-MM-DD")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate createAt
 ) {
 

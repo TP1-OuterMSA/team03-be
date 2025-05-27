@@ -35,7 +35,8 @@ public class SuggestionController implements SuggestionControllerDocs {
 
     @Override
     @PostMapping
-    public ApiResponse<?> createSuggestion(CreateSuggestionRequestDto createSuggestionRequestDto) {
+    public ApiResponse<?> createSuggestion(
+        @RequestBody CreateSuggestionRequestDto createSuggestionRequestDto) {
         String suggestionTitle = suggestionService.createSuggestion(createSuggestionRequestDto);
         return ApiResponse.success(SuccessType.CREATED, suggestionTitle);
     }
