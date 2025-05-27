@@ -7,7 +7,9 @@ import com.example.SchoolLunchReport.domain.product.food.repository.FoodJpaRepos
 import com.example.SchoolLunchReport.domain.product.food.repository.dto.FoodFrequencyDto;
 import com.example.SchoolLunchReport.domain.statistics.domain.boundary.entity.Boundary;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -40,5 +42,15 @@ public class FoodReader {
         return foodJpaRepository.findById(foodId).orElseThrow(
             () -> new EntityNotFoundException("없는 음식 아이디입니다")
         );
+    }
+
+    public List<Food> getFoodAll() {
+        return new ArrayList<>(foodJpaRepository.findAll().stream()
+            .collect(Collectors.toMap(
+                Food::getName,
+                food -> food,
+                (f1, f2) -> f1
+            ))
+            .values());
     }
 }

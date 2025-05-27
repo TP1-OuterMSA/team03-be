@@ -1,6 +1,5 @@
 package com.example.SchoolLunchReport.domain.suggestion.domain.entity;
 
-import com.example.SchoolLunchReport.domain.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.domain.product.food.domain.type.Category;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.UpdateSuggestionRequestDto;
 import com.example.SchoolLunchReport.global.common.BaseTimeEntity;
@@ -9,7 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,24 +32,24 @@ public class Suggestion extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
-    @ManyToOne(optional = true)
-    private Food food;
+    @Column(nullable = false)
+    private String foodName;
 
     @Builder
     public Suggestion(String title, String nickName, Category category, String content,
-        Food food) {
+        String foodName) {
         this.title = title;
         this.nickName = nickName;
         this.category = category;
         this.content = content;
-        this.food = food;
+        this.foodName = foodName;
     }
 
-    public void update(UpdateSuggestionRequestDto updateSuggestionRequestDto, Food food) {
+    public void update(UpdateSuggestionRequestDto updateSuggestionRequestDto) {
         this.title = updateSuggestionRequestDto.title();
         this.nickName = updateSuggestionRequestDto.nickName();
         this.category = updateSuggestionRequestDto.category();
         this.content = updateSuggestionRequestDto.content();
-        this.food = food;
+        this.foodName = updateSuggestionRequestDto.foodName();
     }
 }
