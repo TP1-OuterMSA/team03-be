@@ -43,9 +43,17 @@ public class DatasetService {
 
     @Transactional
     public int createFoodData(List<Food> foods) {
-        List<Food> savedFoods = foodJpaRepository.saveAll(foods);
+        List<Food> foodsToSave = new ArrayList<>();
+        for (Food food : foods) {
+            boolean exists = foodJpaRepository.existsByName(food.getName());
+            if (!exists) {
+                foodsToSave.add(food);
+            }
+        }
+        List<Food> savedFoods = foodJpaRepository.saveAll(foodsToSave);
         return savedFoods.size();
     }
+
 
     @Transactional
     public int createMenuWithFoodsAndEvaluation(
