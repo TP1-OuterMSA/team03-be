@@ -1,7 +1,9 @@
 package com.example.SchoolLunchReport.domain.suggestion.controller;
 
+import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.CreateAnswerRequestDto;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.CreateSuggestionRequestDto;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.SuggestionSpecRequestDto;
+import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.UpdateAnswerRequestDto;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.UpdateSuggestionRequestDto;
 import com.example.SchoolLunchReport.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,4 +30,20 @@ public interface SuggestionControllerDocs {
     @Operation(summary = "건의 삭제 api")
     ApiResponse<?> deleteSuggestion(Long suggestionId);
 
+    //
+
+    @Operation(summary = "답변 등록 api")
+    ApiResponse<?> createAnswer(Long suggestionId, CreateAnswerRequestDto createAnswerRequestDto);
+
+    @Operation(summary = "답변 수정 put api")
+    ApiResponse<?> updateAnswer(
+        Long suggestionId,
+        Long answersId,
+        UpdateAnswerRequestDto updateAnswerRequestDto
+    );
+
+    @Operation(summary = "답변 삭제 api")
+    ApiResponse<?> deleteAnswer(
+        Long suggestionId, Long answersId
+    );
 }
