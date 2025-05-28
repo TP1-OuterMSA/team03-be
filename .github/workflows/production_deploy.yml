@@ -5,54 +5,81 @@ on:
     branches:
       - 'production'
 
-jobs:
-  deploy-to-production:
-    runs-on: ubuntu-22.04
+env:
+  APP_ENV: production
 
-    env:
-      AWS_REGION: ap-northeast-2
-      ECR_REPO: 809691348554.dkr.ecr.ap-northeast-2.amazonaws.com/team03-be-production-repo
-      IMAGE_TAG: sha-${{ github.sha }}
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-22.04
+    environment: production
 
     steps:
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create application.yml from secret
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_YML_PROD }}" > src/main/resources/application.yml
+
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v2
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and push Docker image
+      - name: Save short SHA
+        id: short-sha
+        run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REPO: ${{ secrets.APP_NAME }}-${{ env.APP_ENV }}-repo
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          DOCKER_TAG: ${{ env.APP_ENV }}
         run: |
-          docker build -t $ECR_REPO:$IMAGE_TAG .
-          docker push $ECR_REPO:$IMAGE_TAG
+          docker build -f Dockerfile \
+            -t $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG \
+            -t $ECR_REGISTRY/$ECR_REPO:$DOCKER_TAG \
+            -t $ECR_REGISTRY/$ECR_REPO:sha-${SHORT_SHA} .
+          docker push $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPO:$DOCKER_TAG
+          docker push $ECR_REGISTRY/$ECR_REPO:sha-${SHORT_SHA}
 
-      - name: Checkout ec2-infra-be repo
-        uses: actions/checkout@v4
+      - name: Checkout infrastructure repository
+        uses: actions/checkout@v3
         with:
-          repository: TP1-OuterMSA/ec2-infra-be
-          token: ${{ secrets.EC2_INFRA_REPO_TOKEN }}
-          path: ec2-infra-be
+          repository: TP1-OuterMSA/msa-infra-main
+          path: msa-infra-main
+          token: ${{ secrets.GH_PAT }}
 
-      - name: Update values.yaml with new image tag
+      - name: Update image tag in Helm chart
         run: |
-          cd msa-infra-main/charts/services/team03-be
-          sed -i "s/tag: .*/tag: ${IMAGE_TAG}/" values.yaml
+          cd msa-infra-main/charts/services/${{ secrets.APP_NAME }}
+          sed -i "s/tag: \"production\"/tag: \"sha-${SHORT_SHA}\"/g" values.yaml
 
-      - name: Commit and push updated values.yaml
+
+      - name: Commit and push changes to infrastructure repo
         run: |
-          cd ec2-infra-be
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add charts/services/team03-be/values.yaml
-          git commit -m "ci: update team03-be image tag to ${IMAGE_TAG}"
-          git push origin main
+          cd msa-infra-main
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Update ${{ secrets.APP_NAME }} image tag to sha-${SHORT_SHA}"
+          git push || echo "No changes to push"
