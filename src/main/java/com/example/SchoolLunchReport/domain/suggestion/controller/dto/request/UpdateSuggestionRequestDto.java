@@ -7,7 +7,7 @@ public record UpdateSuggestionRequestDto(
     String nickName,
     Category category,
     String content,
-    Long foodId
+    String foodName
 ) {
 
 }

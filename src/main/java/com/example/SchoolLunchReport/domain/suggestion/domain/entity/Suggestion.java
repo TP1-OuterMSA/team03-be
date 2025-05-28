@@ -1,6 +1,5 @@
 package com.example.SchoolLunchReport.domain.suggestion.domain.entity;
 
-import com.example.SchoolLunchReport.domain.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.domain.product.food.domain.type.Category;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.UpdateSuggestionRequestDto;
 import com.example.SchoolLunchReport.global.common.BaseTimeEntity;
@@ -39,22 +38,22 @@ public class Suggestion extends BaseTimeEntity {
     @JoinColumn
     @ManyToOne(fetch = FetchType.LAZY)
     private Food food;
-
+  
     @Builder
     public Suggestion(String title, String nickName, Category category, String content,
-        Food food) {
+        String foodName) {
         this.title = title;
         this.nickName = nickName;
         this.category = category;
         this.content = content;
-        this.food = food;
+        this.foodName = foodName;
     }
 
-    public void update(UpdateSuggestionRequestDto updateSuggestionRequestDto, Food food) {
+    public void update(UpdateSuggestionRequestDto updateSuggestionRequestDto) {
         this.title = updateSuggestionRequestDto.title();
         this.nickName = updateSuggestionRequestDto.nickName();
         this.category = updateSuggestionRequestDto.category();
         this.content = updateSuggestionRequestDto.content();
-        this.food = food;
+        this.foodName = updateSuggestionRequestDto.foodName();
     }
 }
