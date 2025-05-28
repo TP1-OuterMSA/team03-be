@@ -3,12 +3,16 @@ package com.example.SchoolLunchReport.domain.suggestion.domain.entity;
 import com.example.SchoolLunchReport.domain.product.food.domain.type.Category;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.UpdateSuggestionRequestDto;
 import com.example.SchoolLunchReport.global.common.BaseTimeEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Builder;
@@ -34,6 +38,14 @@ public class Suggestion extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String content;
+
+    @OneToMany(
+        mappedBy = "suggestion",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
+    private List<Answer> answers = new ArrayList<>();
 
     @JoinColumn
     @ManyToOne(fetch = FetchType.LAZY)
