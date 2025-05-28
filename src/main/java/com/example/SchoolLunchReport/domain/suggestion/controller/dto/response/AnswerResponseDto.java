@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 
 public record AnswerResponseDto(
+    Long answerId,
     String managerName,
     String content,
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -12,7 +13,7 @@ public record AnswerResponseDto(
 ) {
 
     public static AnswerResponseDto from(Answer answer) {
-        return new AnswerResponseDto(answer.getManagerName(), answer.getContent(),
+        return new AnswerResponseDto(answer.getId(), answer.getManagerName(), answer.getContent(),
             answer.getCreatedAt());
     }
 }

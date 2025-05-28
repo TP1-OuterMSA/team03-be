@@ -1,5 +1,6 @@
 package com.example.SchoolLunchReport.domain.suggestion.service;
 
+import com.example.SchoolLunchReport.domain.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.domain.product.food.support.FoodReader;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.CreateAnswerRequestDto;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.CreateSuggestionRequestDto;
@@ -32,7 +33,8 @@ public class SuggestionService {
     final FoodReader foodReader;
 
     public String createSuggestion(CreateSuggestionRequestDto createSuggestionRequestDto) {
-        Suggestion suggestion = createSuggestionRequestDto.toEntity();
+        Food foodById = foodReader.getFoodById(createSuggestionRequestDto.foodId());
+        Suggestion suggestion = createSuggestionRequestDto.toEntity(foodById);
         suggestionJpaRepo.save(suggestion);
         return suggestion.getTitle();
     }
@@ -58,7 +60,8 @@ public class SuggestionService {
         UpdateSuggestionRequestDto updateSuggestionRequestDto
     ) {
         Suggestion suggestion = findSuggestionById(suggestionId);
-        suggestion.update(updateSuggestionRequestDto);
+        Food foodById = foodReader.getFoodById(updateSuggestionRequestDto.foodId());
+        suggestion.update(updateSuggestionRequestDto, foodById);
         return SuggestionResponseDto.toEntity(suggestion);
 
     }
