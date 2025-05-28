@@ -12,6 +12,7 @@ public record SuggestionListItemResponseDto(
     String title,
     String nickName,
     Category category,
+    String foodName,
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate createAt
 ) {
@@ -23,6 +24,7 @@ public record SuggestionListItemResponseDto(
             .nickName(suggestion.getNickName())
             .category(suggestion.getCategory())
             .createAt(suggestion.getCreatedAt())
+            .foodName(suggestion.getFood().getName())
             .build();
     }
 }

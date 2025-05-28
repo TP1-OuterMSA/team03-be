@@ -13,6 +13,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,9 +39,6 @@ public class Suggestion extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private String foodName;
-
     @OneToMany(
         mappedBy = "suggestion",
         cascade = CascadeType.ALL,
@@ -48,6 +47,10 @@ public class Suggestion extends BaseTimeEntity {
     )
     private List<Answer> answers = new ArrayList<>();
 
+    @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Food food;
+  
     @Builder
     public Suggestion(String title, String nickName, Category category, String content,
         String foodName) {

@@ -18,6 +18,7 @@ public record SuggestionResponseDto(
     String content,
     @Nullable
     List<AnswerResponseDto> answers,
+    String foodName,
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate createAt
 ) {
@@ -36,6 +37,7 @@ public record SuggestionResponseDto(
             .nickName(suggestion.getNickName())
             .createAt(suggestion.getCreatedAt())
             .answers(list)
+            .foodName(suggestion.getFood().getName())
             .build();
     }
 }
