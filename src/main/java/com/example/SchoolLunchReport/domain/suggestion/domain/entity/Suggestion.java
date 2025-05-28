@@ -5,9 +5,12 @@ import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.Up
 import com.example.SchoolLunchReport.global.common.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,9 +35,10 @@ public class Suggestion extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private String foodName;
-
+    @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Food food;
+  
     @Builder
     public Suggestion(String title, String nickName, Category category, String content,
         String foodName) {
