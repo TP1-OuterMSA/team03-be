@@ -6,6 +6,7 @@ import com.example.SchoolLunchReport.domain.product.menu.repository.MenuJpaRepos
 import com.example.SchoolLunchReport.domain.statistics.domain.boundary.entity.Boundary;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -25,5 +26,13 @@ public class MenuReader {
                 () -> new IllegalArgumentException(
                     String.format("존재하지 않은 메뉴입니다.\nmenuDate: %s mealType: %s", menuDate,
                         mealType.name())));
+    }
+
+    public List<Menu> getMenuInBoundary(LocalDate startDate, LocalDate endDate) {
+        return menuJpaRepository.findByDateBetween(startDate, endDate);
+    }
+
+    public Optional<Menu> findMenuByDateAndType(LocalDate date, MealType mealType) {
+        return menuJpaRepository.findByDateAndMealType(date, mealType);
     }
 }

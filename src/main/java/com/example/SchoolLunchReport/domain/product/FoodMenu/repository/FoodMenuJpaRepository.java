@@ -16,4 +16,6 @@ public interface FoodMenuJpaRepository extends JpaRepository<FoodMenu, Long> {
     Optional<FoodMenu> findByMenuAndFood(Menu menu, Food food);
 
     List<FoodMenu> findByFoodId(Long foodId);
+
+    void deleteAllByMenu(Menu menu);
 }
