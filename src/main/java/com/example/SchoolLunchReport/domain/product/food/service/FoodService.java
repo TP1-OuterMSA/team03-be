@@ -26,4 +26,8 @@ public class FoodService {
     public List<Food> getFoodList() {
         return foodReader.getFoodAll();
     }
+
+    public Food getFoodByName(String foodName) {
+        return foodReader.findByFoodName(foodName);
+    }
 }

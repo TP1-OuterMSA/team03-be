@@ -2,9 +2,12 @@ package com.example.SchoolLunchReport.domain.suggestion.controller;
 
 import static com.example.SchoolLunchReport.global.common.Constants.ANALYTICS_TEAM_URL;
 
+import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.CreateAnswerRequestDto;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.CreateSuggestionRequestDto;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.SuggestionSpecRequestDto;
+import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.UpdateAnswerRequestDto;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.request.UpdateSuggestionRequestDto;
+import com.example.SchoolLunchReport.domain.suggestion.controller.dto.response.AnswerResponseDto;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.response.DeleteSuggestionResponseDto;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.response.SuggestionListItemResponseDto;
 import com.example.SchoolLunchReport.domain.suggestion.controller.dto.response.SuggestionResponseDto;
@@ -82,5 +85,37 @@ public class SuggestionController implements SuggestionControllerDocs {
         DeleteSuggestionResponseDto deleteSuggestion =
             suggestionService.deleteSuggestion(suggestionId);
         return ApiResponse.success(SuccessType.SUCCESS, deleteSuggestion);
+    }
+
+    @Override
+    @PostMapping("/{suggestionId}/answers")
+    public ApiResponse<?> createAnswer(
+        @PathVariable(name = "suggestionId") Long suggestionId,
+        @RequestBody CreateAnswerRequestDto createAnswerRequestDto
+    ) {
+        suggestionService.createAnswer(suggestionId, createAnswerRequestDto);
+        return ApiResponse.success(SuccessType.CREATED);
+    }
+
+    @Override
+    @PutMapping("/{suggestionId}/answers/{answersId}")
+    public ApiResponse<?> updateAnswer(
+        @PathVariable(value = "suggestionId") Long suggestionId,
+        @PathVariable(value = "answersId") Long answersId,
+        @RequestBody UpdateAnswerRequestDto updateAnswerRequestDto
+    ) {
+        AnswerResponseDto answerResponseDto = suggestionService.updateAnswer(suggestionId,
+            answersId, updateAnswerRequestDto);
+        return ApiResponse.success(SuccessType.SUCCESS, answerResponseDto);
+    }
+
+    @Override
+    @DeleteMapping("/{suggestionId}/answers/{answersId}")
+    public ApiResponse<?> deleteAnswer(
+        @PathVariable(value = "suggestionId") Long suggestionId,
+        @PathVariable(value = "answersId") Long answersId
+    ) {
+        Long answerId = suggestionService.deleteAnswer(suggestionId, answersId);
+        return ApiResponse.success(SuccessType.SUCCESS, answerId);
     }
 }
