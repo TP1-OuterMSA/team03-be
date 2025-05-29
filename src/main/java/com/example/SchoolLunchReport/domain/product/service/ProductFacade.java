@@ -93,6 +93,7 @@ public class ProductFacade {
             allergySet.remove("없음");
             DailyMenuResponseDto dto = new DailyMenuResponseDto(
                 menu.getId(),
+                menu.getMealType(),
                 typeMap.getOrDefault(Category.RICE, "없음"),
                 typeMap.getOrDefault(Category.SOUP, "없음"),
                 typeMap.getOrDefault(Category.MAIN_DISH, "없음"),
