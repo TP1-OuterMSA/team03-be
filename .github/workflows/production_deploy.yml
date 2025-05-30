@@ -1,13 +1,15 @@
-name: Production Deploy
+name: Deploy to Production
 
 on:
   push:
     branches:
-      - 'production'
+      - production
 
 env:
-  APP_ENV: production
   AWS_REGION: ap-northeast-2
+  ECR_REPO: 809691348554.dkr.ecr.ap-northeast-2.amazonaws.com/team03-be-production-repo
+  INFRA_REPO: https://github.com/TP1-OuterMSA/ec2-infra-be.git
+  SERVICE_PATH: charts/services/team03-be
 
 permissions:
   id-token: write
@@ -15,11 +17,11 @@ permissions:
 
 jobs:
   deploy:
-    name: Build & Deploy
+    name: Build & Push to ECR + Update Helm
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout
+      - name: Checkout source
         uses: actions/checkout@v4
 
       - name: Set short SHA
@@ -33,25 +35,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Login to ECR
+      - name: Login to Amazon ECR
         run: |
-          aws ecr get-login-password | docker login --username AWS \
-            --password-stdin 809691348554.dkr.ecr.ap-northeast-2.amazonaws.com
+          aws ecr get-login-password | docker login --username AWS --password-stdin ${{ env.ECR_REPO }}
 
       - name: Build and Push Docker Image
         run: |
           docker build -t team03-be .
-          docker tag team03-be:latest 809691348554.dkr.ecr.ap-northeast-2.amazonaws.com/team03-be-production-repo:sha-${SHORT_SHA}
-          docker push 809691348554.dkr.ecr.ap-northeast-2.amazonaws.com/team03-be-production-repo:sha-${SHORT_SHA}
+          docker tag team03-be:latest ${{ env.ECR_REPO }}:sha-${SHORT_SHA}
+          docker push ${{ env.ECR_REPO }}:sha-${SHORT_SHA}
 
-      - name: Update Helm values.yaml
+      - name: Clone infra repo and update Helm tag
         run: |
-          git clone https://github.com/TP1-OuterMSA/ec2-infra-be.git
-          cd ec2-infra-be/charts/services/team03-be
+          git clone ${{ env.INFRA_REPO }}
+          cd ec2-infra-be/${{ env.SERVICE_PATH }}
           sed -i "s/tag: \".*\"/tag: \"sha-${SHORT_SHA}\"/" values.yaml
 
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
+
           git add values.yaml
-          git commit -m "chore(team03-be): Update tag to sha-${SHORT_SHA}"
+          git commit -m "chore(team03-be): update image tag to sha-${SHORT_SHA}"
           git push origin main
