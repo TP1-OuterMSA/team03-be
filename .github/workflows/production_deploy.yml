@@ -47,14 +47,20 @@ jobs:
           docker push ${{ env.ECR_REPO }}:sha-${SHORT_SHA}
 
       - name: Clone Infra Repo and Update Helm Tag
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          git clone ${{ env.INFRA_REPO }}
-          cd msa-infra-main/${{ env.SERVICE_PATH }}
+          git clone https://${GH_PAT}@github.com/TP1-OuterMSA/msa-infra-main.git
+          cd msa-infra-main/charts/services/team03-be
+
+          # SHA로 이미지 태그 변경
           sed -i "s/tag: \".*\"/tag: \"sha-${SHORT_SHA}\"/" values.yaml
 
+          # Git 설정 및 push
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
 
           git add values.yaml
           git commit -m "chore(team03-be): update image tag to sha-${SHORT_SHA}"
-          git push origin main
+          git push https://${GH_PAT}@github.com/TP1-OuterMSA/msa-infra-main.git HEAD:main
+
