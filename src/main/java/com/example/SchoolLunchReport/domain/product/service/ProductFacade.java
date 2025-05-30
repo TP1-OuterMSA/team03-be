@@ -46,6 +46,7 @@ public class ProductFacade {
     public Map<Category, List<FoodListResponseDto>> getMenuListByCategory() {
         List<Category> categoryOrder = List.of(
             Category.RICE,
+            Category.SOUP,
             Category.MAIN_DISH,
             Category.SIDE_DISH,
             Category.DESSERT
