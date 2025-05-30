@@ -1,14 +1,15 @@
-name: Deploy to Production
+name: Production Deploy
 
 on:
   push:
     branches:
-      - production
+      - 'production'
 
 env:
+  APP_ENV: production
   AWS_REGION: ap-northeast-2
   ECR_REPO: 809691348554.dkr.ecr.ap-northeast-2.amazonaws.com/team03-be-production-repo
-  INFRA_REPO: https://github.com/TP1-OuterMSA/ec2-infra-be.git
+  INFRA_REPO: https://github.com/TP1-OuterMSA/msa-infra-main.git
   SERVICE_PATH: charts/services/team03-be
 
 permissions:
@@ -17,11 +18,11 @@ permissions:
 
 jobs:
   deploy:
-    name: Build & Push to ECR + Update Helm
+    name: Build & Deploy
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout source
+      - name: Checkout Source Repo
         uses: actions/checkout@v4
 
       - name: Set short SHA
@@ -45,10 +46,10 @@ jobs:
           docker tag team03-be:latest ${{ env.ECR_REPO }}:sha-${SHORT_SHA}
           docker push ${{ env.ECR_REPO }}:sha-${SHORT_SHA}
 
-      - name: Clone infra repo and update Helm tag
+      - name: Clone Infra Repo and Update Helm Tag
         run: |
           git clone ${{ env.INFRA_REPO }}
-          cd ec2-infra-be/${{ env.SERVICE_PATH }}
+          cd msa-infra-main/${{ env.SERVICE_PATH }}
           sed -i "s/tag: \".*\"/tag: \"sha-${SHORT_SHA}\"/" values.yaml
 
           git config --global user.email "actions@github.com"
