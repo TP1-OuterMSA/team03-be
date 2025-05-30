@@ -1,19 +1,21 @@
 package com.example.SchoolLunchReport.domain.statistics.domain.rank.repo;
 
-import com.example.SchoolLunchReport.domain.statistics.domain.rank.entity.FoodRank;
+import com.example.SchoolLunchReport.domain.product.food.domain.entity.Food;
 import com.example.SchoolLunchReport.domain.statistics.domain.boundary.type.PeriodType;
+import com.example.SchoolLunchReport.domain.statistics.domain.rank.entity.FoodRank;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface RankJpaRepo extends JpaRepository<FoodRank, Long> {
-  
+
     List<FoodRank> findTop5ByPeriodTypeAndRegisterDateOrderByRankingAsc(PeriodType periodType,
         LocalDate conditionDate);
-  
+
     List<FoodRank> findTop5ByPeriodTypeAndRegisterDateOrderByRankingDesc(PeriodType periodType,
         LocalDate conditionDate);
 
@@ -39,4 +41,6 @@ public interface RankJpaRepo extends JpaRepository<FoodRank, Long> {
     );
 
     List<FoodRank> findByPeriodTypeAndRegisterDate(PeriodType periodType, LocalDate startPeriod);
+
+    Optional<FoodRank> findTopByFoodOrderByRegisterDateDesc(Food food);
 }
