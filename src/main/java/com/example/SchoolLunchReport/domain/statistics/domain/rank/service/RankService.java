@@ -1,8 +1,6 @@
 package com.example.SchoolLunchReport.domain.statistics.domain.rank.service;
 
 import com.example.SchoolLunchReport.domain.product.food.domain.entity.Food;
-import com.example.SchoolLunchReport.domain.statistics.domain.rank.support.RankImpl;
-import com.example.SchoolLunchReport.domain.statistics.domain.rank.support.RankSaver;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.RankMenuResponseDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.StatisticsResponse.ScoreCount;
 import com.example.SchoolLunchReport.domain.statistics.domain.boundary.support.BoundaryMapper;
@@ -11,7 +9,9 @@ import com.example.SchoolLunchReport.domain.statistics.domain.feedback.entity.Fe
 import com.example.SchoolLunchReport.domain.statistics.domain.rank.entity.FoodRank;
 import com.example.SchoolLunchReport.domain.statistics.domain.rank.support.RankCalculator;
 import com.example.SchoolLunchReport.domain.statistics.domain.rank.support.RankFilter;
+import com.example.SchoolLunchReport.domain.statistics.domain.rank.support.RankImpl;
 import com.example.SchoolLunchReport.domain.statistics.domain.rank.support.RankReader;
+import com.example.SchoolLunchReport.domain.statistics.domain.rank.support.RankSaver;
 import com.example.SchoolLunchReport.domain.statistics.domain.type.RankType;
 import java.time.LocalDate;
 import java.util.List;

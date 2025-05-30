@@ -1,10 +1,10 @@
 package com.example.SchoolLunchReport.domain.statistics.controller;
 
-import com.example.SchoolLunchReport.global.response.ApiResponse;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.request.PeriodSpecRequestDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.DesiredFoodResponseDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.TrackingResponseDto;
 import com.example.SchoolLunchReport.domain.statistics.domain.boundary.type.PeriodType;
+import com.example.SchoolLunchReport.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
@@ -40,4 +40,7 @@ public interface StatisticsControllerDocs {
     ApiResponse<?> getMenuFrequencyByCategory(
         PeriodSpecRequestDto periodSpecRequestDto
     );
+
+    @Operation(summary = "목표 달성 현황 조회 API")
+    ApiResponse<?> getAllGoalStatus();
 }
