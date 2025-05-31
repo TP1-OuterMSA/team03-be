@@ -47,7 +47,7 @@ public class ProductController implements ProductControllerDocs {
     public ApiResponse<?> getMenuList(
         @RequestParam(value = "startDate") LocalDate startDate,
         @RequestParam(value = "endDate") LocalDate endDate) {
-        Map<LocalDate, DailyMenuResponseDto> menuListInBoundary = productFacade.getMenuListInBoundary(
+        Map<LocalDate, List<DailyMenuResponseDto>> menuListInBoundary = productFacade.getMenuListInBoundary(
             startDate, endDate);
         return ApiResponse.success(SuccessType.SUCCESS, menuListInBoundary);
     }

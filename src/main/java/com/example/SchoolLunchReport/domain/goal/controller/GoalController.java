@@ -45,7 +45,7 @@ public class GoalController implements GoalControllerDocs {
     @GetMapping("/{foodId}")
     public ApiResponse<?> getGoal(@PathVariable Long foodId) {
         GoalResponseDto goalResponseDto = goalService.getGoalByFood(foodId);
-        return null;
+        return ApiResponse.success(SuccessType.SUCCESS, goalResponseDto);
     }
 
     @Override
