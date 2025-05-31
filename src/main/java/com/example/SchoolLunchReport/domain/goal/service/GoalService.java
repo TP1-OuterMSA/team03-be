@@ -10,6 +10,7 @@ import com.example.SchoolLunchReport.domain.product.food.support.FoodReader;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.common.errors.DuplicateResourceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +24,15 @@ public class GoalService {
 
     public void createGoal(CreateGoalRequestDto createGoalRequestDto) {
         Food foodById = foodReader.getFoodById(createGoalRequestDto.foodId());
+        if (isExistGoal(foodById)) {
+            throw new DuplicateResourceException("이미 존재하는 목표입니다");
+        }
         Goal goal = createGoalRequestDto.toEntity(foodById);
         goalJpaRepository.save(goal);
+    }
+
+    private boolean isExistGoal(Food food) {
+        return goalJpaRepository.existsByFood(food);
     }
 
     @Transactional(readOnly = true)

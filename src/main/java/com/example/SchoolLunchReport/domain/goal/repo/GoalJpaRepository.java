@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface GoalJpaRepository extends JpaRepository<Goal, Long> {
 
     Goal findByFood(Food food);
+
+    boolean existsByFood(Food food);
 }
