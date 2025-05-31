@@ -3,6 +3,7 @@ package com.example.SchoolLunchReport.domain.statistics.service;
 import static com.example.SchoolLunchReport.domain.statistics.domain.boundary.type.PeriodType.MONTHLY;
 import static com.example.SchoolLunchReport.domain.statistics.domain.boundary.type.PeriodType.WEEKLY;
 
+import com.example.SchoolLunchReport.domain.goal.repo.GoalJpaRepository;
 import com.example.SchoolLunchReport.domain.product.food.repository.dto.FoodFrequencyDto;
 import com.example.SchoolLunchReport.domain.product.food.service.FoodService;
 import com.example.SchoolLunchReport.domain.product.menu.domain.entity.Menu;
@@ -11,6 +12,7 @@ import com.example.SchoolLunchReport.domain.statistics.controller.dto.request.Pe
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.CombinedRankMenuResponseDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.CombinedStatisticsResponse;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.DesiredFoodResponseDto;
+import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.GoalStatusResponseDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.RankMenuResponseDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.StatisticsResponse;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.StatisticsResponse.ScoreCount;
@@ -23,6 +25,7 @@ import com.example.SchoolLunchReport.domain.statistics.domain.feedback.entity.Fe
 import com.example.SchoolLunchReport.domain.statistics.domain.feedback.repo.dto.CategoryScoreAvgDto;
 import com.example.SchoolLunchReport.domain.statistics.domain.feedback.service.FeedBackService;
 import com.example.SchoolLunchReport.domain.statistics.domain.rank.entity.FoodRank;
+import com.example.SchoolLunchReport.domain.statistics.domain.rank.repo.RankJpaRepo;
 import com.example.SchoolLunchReport.domain.statistics.domain.rank.service.RankService;
 import java.time.LocalDate;
 import java.util.List;
@@ -41,6 +44,8 @@ public class StatisticsFacade {
     final DesiredFoodService desiredFoodService;
     final RankService rankService;
     final BoundaryMapper boundaryMapper;
+    final GoalJpaRepository goalJpaRepository;
+    final RankJpaRepo rankJpaRepo;
 
     @Transactional(readOnly = true)
     public CombinedRankMenuResponseDto getRankMenu(PeriodType periodType, LocalDate date) {
@@ -114,4 +119,53 @@ public class StatisticsFacade {
         Boundary boundary = boundaryMapper.mapBoundary(periodSpecRequestDto);
         return foodService.getFoodFrequencyByCategory(boundary);
     }
+
+    @Transactional(readOnly = true)
+    public GoalStatusResponseDto getGoalStatus() {
+        return GoalStatusResponseDto.of();
+    }
+//        List<Goal> goals = goalJpaRepository.findAll();
+//
+//        List<FoodGoalStatusDto> foodGoalDtos = new ArrayList<>();
+//        int achievedCount = 0;
+//
+//        for (Goal goal : goals) {
+//            Food food = goal.getFood();
+//            FoodRank foodRank = rankJpaRepo.findTopByFoodOrderByRegisterDateDesc(food)
+//                .orElse(null);
+//
+//            if (foodRank == null) {
+//                continue;
+//            }
+//
+//            if (isAchieve(goal, foodRank)) {
+//                achievedCount++;
+//            }
+//
+//            foodGoalDtos.add(new FoodGoalStatusDto(
+//                food.getId(),
+//                food.getName(),
+//                food.getCategory().name(),
+//                goal.getTargetScore(),
+//                foodRank.getAverageScore(),
+//                goal.getTargetFrequency(),
+//                foodRank.getFrequency(),
+//                goal.getTargetSatisfaction(),
+//                foodRank.getAverageSatisfaction(),
+//                isAchieved
+//            ));
+//        }
+//
+//        return new GoalStatusResponseDto(goals.size(), achievedCount, foodGoalDtos);
+//    }
+//
+//    private boolean isGoalAchieved(Goal goal, FoodRank rank) {
+//        return rank.getAverageScore() >= goal.getTargetScore()
+//            && rank.getFrequency() >= goal.getTargetFrequency()
+//            && rank.getAverageSatisfaction() >= goal.getTargetSatisfaction();
+//    }
+//
+//    private boolean isAchieve(Goal goal, FoodRank foodRank) {
+//
+//    }
 }

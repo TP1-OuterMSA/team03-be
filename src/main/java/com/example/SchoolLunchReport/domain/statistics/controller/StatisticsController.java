@@ -6,6 +6,7 @@ import com.example.SchoolLunchReport.domain.product.food.repository.dto.FoodFreq
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.request.PeriodSpecRequestDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.CombinedRankMenuResponseDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.DesiredFoodResponseDto;
+import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.GoalStatusResponseDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.RankMenuResponseDto;
 import com.example.SchoolLunchReport.domain.statistics.controller.dto.response.TrackingResponseDto;
 import com.example.SchoolLunchReport.domain.statistics.domain.boundary.type.PeriodType;
@@ -107,4 +108,12 @@ public class StatisticsController implements StatisticsControllerDocs {
             periodSpecRequestDto);
         return ApiResponse.success(SuccessType.SUCCESS, menuFrequencyByCategory);
     }
+
+    @Override
+    @GetMapping("/goals/status")
+    public ApiResponse<?> getAllGoalStatus() {
+        GoalStatusResponseDto dtos = statisticsFacade.getGoalStatus();
+        return ApiResponse.success(SuccessType.SUCCESS, dtos);
+    }
+
 }

@@ -19,13 +19,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.errors.DuplicateResourceException;
@@ -46,6 +47,7 @@ public class ProductFacade {
     public Map<Category, List<FoodListResponseDto>> getMenuListByCategory() {
         List<Category> categoryOrder = List.of(
             Category.RICE,
+            Category.SOUP,
             Category.MAIN_DISH,
             Category.SIDE_DISH,
             Category.DESSERT
@@ -71,15 +73,15 @@ public class ProductFacade {
         return orderedMap;
     }
 
-    public Map<LocalDate, DailyMenuResponseDto> getMenuListInBoundary(LocalDate startDate,
+    public Map<LocalDate, List<DailyMenuResponseDto>> getMenuListInBoundary(LocalDate startDate,
         LocalDate endDate) {
         List<Menu> menus = menuService.getMenuInBoundary(startDate, endDate);
+        Map<LocalDate, List<DailyMenuResponseDto>> result = new TreeMap<>();
 
-        Map<LocalDate, DailyMenuResponseDto> result = new HashMap<>();
-        Set<String> allergySet = new HashSet<>();
         for (Menu menu : menus) {
             Map<Category, String> typeMap = new EnumMap<>(Category.class);
             Set<String> hashtagSet = new HashSet<>();
+            Set<String> allergySet = new HashSet<>();
 
             for (FoodMenu foodMenu : menu.getFoodMenuList()) {
                 Food food = foodMenu.getFood();
@@ -88,7 +90,9 @@ public class ProductFacade {
                 typeMap.put(type, food.getName());
                 allergySet.addAll(Arrays.stream(food.getAllergy().split("\\s*,\\s*"))
                     .toList());
-                hashtagSet.add(menu.getHashTags());
+                if (menu.getHashTags() != null) {
+                    hashtagSet.addAll(Arrays.asList(menu.getHashTags().split(",")));
+                }
             }
             allergySet.remove("없음");
             DailyMenuResponseDto dto = new DailyMenuResponseDto(
@@ -103,10 +107,12 @@ public class ProductFacade {
                 new ArrayList<>(hashtagSet),
                 null
             );
-
-            result.put(menu.getDate(), dto);
+            result.computeIfAbsent(menu.getDate(), k -> new ArrayList<>())
+                .add(dto);
         }
-
+        for (List<DailyMenuResponseDto> dtoList : result.values()) {
+            dtoList.sort(Comparator.comparing(DailyMenuResponseDto::mealType));
+        }
         return result;
     }
 
