@@ -24,8 +24,8 @@ public class FoodReader {
             boundary.startDate(), boundary.endDate());
         List<FoodFrequencyDto> result = objects.stream()
             .map(obj -> new FoodFrequencyDto(
-                (Category) obj[0],
-                (SubCategory) obj[1],
+                Category.valueOf((String) obj[0]),
+                SubCategory.valueOf((String) obj[1]),
                 (Long) obj[2]
             ))
             .toList();
