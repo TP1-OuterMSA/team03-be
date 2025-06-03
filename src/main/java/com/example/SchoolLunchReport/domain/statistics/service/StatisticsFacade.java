@@ -110,10 +110,12 @@ public class StatisticsFacade {
         return desiredFoodService.getDesiredFoodTopN(boundary, 3);
     }
 
+    @Transactional(readOnly = true)
     public List<CategoryScoreAvgDto> getCategoryScore(LocalDate startDate, LocalDate endDate) {
         return feedBackService.getCategoryScore(startDate, endDate);
     }
 
+    @Transactional(readOnly = true)
     public List<FoodFrequencyDto> getMenuFrequencyByCategory(
         PeriodSpecRequestDto periodSpecRequestDto) {
         Boundary boundary = boundaryMapper.mapBoundary(periodSpecRequestDto);
