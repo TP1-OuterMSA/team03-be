@@ -34,7 +34,7 @@ public class RankImpl {
                 Double averageScore = entry.getValue();
                 return FoodRank.builder()
                     .food(food)
-                    .ranking(rankCounter.get())
+                    .ranking(rankCounter.getAndIncrement())
                     .score(averageScore)
                     .registerDate(registerDate)
                     .periodType(periodType)
