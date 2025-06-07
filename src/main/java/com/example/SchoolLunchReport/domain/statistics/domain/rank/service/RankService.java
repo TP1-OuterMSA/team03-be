@@ -70,9 +70,9 @@ public class RankService {
         List<FoodRank> foodRankList = rankImpl.generateRanks(foodScoreAverageMap, periodType,
             registerDate);
         List<FoodRank> preFoodRankList = rankReader.findByPeriodTypeAndRegisterDate(
-            periodType, registerDate);
-        Map<Food, Integer> preFoodRanking = rankImpl.getRankingMap(preFoodRankList);
+            periodType, registerDate.minusWeeks(1));
 
+        Map<Food, Integer> preFoodRanking = rankImpl.getRankingMap(preFoodRankList);
         Integer preRankingMedian = rankCalculator.getRankingMedian(preFoodRanking);
 
         rankCalculator.compareRank(foodRankList, preFoodRanking, preRankingMedian);

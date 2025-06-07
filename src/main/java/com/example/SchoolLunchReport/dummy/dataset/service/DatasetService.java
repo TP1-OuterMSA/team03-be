@@ -2,8 +2,6 @@ package com.example.SchoolLunchReport.dummy.dataset.service;
 
 import com.example.SchoolLunchReport.ai.client.LLMClient;
 import com.example.SchoolLunchReport.ai.client.dto.request.AdjustMenuNameRequestDto;
-import com.example.SchoolLunchReport.dummy.dataset.dto.FeedBackDTO;
-import com.example.SchoolLunchReport.dummy.dataset.dto.MenuWithFoodsAndEvaluationDTO;
 import com.example.SchoolLunchReport.domain.product.FoodMenu.domain.entity.FoodMenu;
 import com.example.SchoolLunchReport.domain.product.FoodMenu.repository.FoodMenuJpaRepository;
 import com.example.SchoolLunchReport.domain.product.evaluation.entity.Evaluation;
@@ -18,6 +16,8 @@ import com.example.SchoolLunchReport.domain.statistics.domain.desired.repo.Desir
 import com.example.SchoolLunchReport.domain.statistics.domain.feedback.entity.FeedBack;
 import com.example.SchoolLunchReport.domain.statistics.domain.feedback.repo.FeedBackJpaRepo;
 import com.example.SchoolLunchReport.domain.statistics.domain.rank.support.RankImpl;
+import com.example.SchoolLunchReport.dummy.dataset.dto.FeedBackDTO;
+import com.example.SchoolLunchReport.dummy.dataset.dto.MenuWithFoodsAndEvaluationDTO;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -117,13 +117,13 @@ public class DatasetService {
                 throw new IllegalArgumentException("점수는 1~5 사이의 값이어야 합니다: " + dto.getScore());
             }
             FoodMenu foodMenu = foodMenuJpaRepository.findById(dto.getFoodMenuId())
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "ID가 " + dto.getFoodMenuId() + "인 푸드메뉴를 찾을 수 없습니다"));
+                .orElseThrow(() -> new IllegalArgumentException(
+                    "ID가 " + dto.getFoodMenuId() + "인 푸드메뉴를 찾을 수 없습니다"));
             FeedBack feedBack = FeedBack.builder()
-                    .score(dto.getScore())
-                    .foodMenu(foodMenu)
-                    .evaluation(dto.getEvaluation())
-                    .build();
+                .score(dto.getScore())
+                .foodMenu(foodMenu)
+                .evaluation(dto.getEvaluation())
+                .build();
             feedBackList.add(feedBack);
         }
         feedBackJpaRepo.saveAll(feedBackList);

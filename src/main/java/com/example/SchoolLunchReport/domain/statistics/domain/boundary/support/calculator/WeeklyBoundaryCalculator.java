@@ -19,7 +19,7 @@ public class WeeklyBoundaryCalculator implements BoundaryCalculator {
     @Override
     public Boundary createBoundary(LocalDate conditionDate) {
         LocalDate startLocalDate = conditionDate.with(
-            TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+            TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate endLocalDate = startLocalDate.plusDays(5);
         return Boundary.builder()
             .startDate(startLocalDate)

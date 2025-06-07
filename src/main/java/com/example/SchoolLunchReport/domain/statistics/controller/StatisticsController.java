@@ -79,7 +79,7 @@ public class StatisticsController implements StatisticsControllerDocs {
             localDate));
     }
 
-    @GetMapping("/desired-food/{periodType}")
+    @GetMapping("/desired-food")
     public ApiResponse<List<DesiredFoodResponseDto>> getDesiredFood(
         @Valid @ModelAttribute PeriodSpecRequestDto periodSpecRequestDto
     ) {
