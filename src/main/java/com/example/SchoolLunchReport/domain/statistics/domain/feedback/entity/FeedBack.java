@@ -1,8 +1,8 @@
 package com.example.SchoolLunchReport.domain.statistics.domain.feedback.entity;
 
-import com.example.SchoolLunchReport.global.common.BaseTimeEntity;
 import com.example.SchoolLunchReport.domain.product.FoodMenu.domain.entity.FoodMenu;
 import com.example.SchoolLunchReport.domain.product.food.domain.entity.Food;
+import com.example.SchoolLunchReport.global.common.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,6 +24,7 @@ public class FeedBack extends BaseTimeEntity {
     @ManyToOne
     private FoodMenu foodMenu;
     private String evaluation;
+
     @Builder
     public FeedBack(Double score, FoodMenu foodMenu, String evaluation) {
         this.score = score;
